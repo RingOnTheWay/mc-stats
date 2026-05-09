@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MC Stats - Minecraft服务器数据统计</title>
+    <script src="chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root {
+            --md-sys-color-primary: #6750A4;
+            --md-sys-color-on-primary: #FFFFFF;
+            --md-sys-color-primary-container: #EADDFF;
+            --md-sys-color-on-primary-container: #21005D;
+            --md-sys-color-secondary: #625B71;
+            --md-sys-color-on-secondary: #FFFFFF;
+            --md-sys-color-secondary-container: #E8DEF8;
+            --md-sys-color-on-secondary-container: #1D192B;
+            --md-sys-color-tertiary: #7D5260;
+            --md-sys-color-on-tertiary: #FFFFFF;
+            --md-sys-color-error: #B3261E;
+            --md-sys-color-on-error: #FFFFFF;
+            --md-sys-color-error-container: #F9DEDC;
+            --md-sys-color-on-error-container: #410E0B;
+            --md-sys-color-background: #FEF7FF;
+            --md-sys-color-on-background: #1D1B20;
+            --md-sys-color-surface: #FEF7FF;
+            --md-sys-color-on-surface: #1D1B20;
+            --md-sys-color-surface-variant: #E7E0EC;
+            --md-sys-color-on-surface-variant: #49454F;
+            --md-sys-color-outline: #79747E;
+            --md-sys-color-outline-variant: #CAC4D0;
+            --md-sys-color-shadow: #000000;
+            --md-sys-color-surface-tint: #6750A4;
+            --md-sys-color-surface-container-lowest: #FFFFFF;
+            --md-sys-color-surface-container-low: #F7F2FA;
+            --md-sys-color-surface-container: #F3EDF7;
+            --md-sys-color-surface-container-high: #ECE6F0;
+            --md-sys-color-surface-container-highest: #E6E0E9;
+            --sidebar-width: 280px;
+            --topbar-height: 64px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--md-sys-color-background);
+            color: var(--md-sys-color-on-background);
+            min-height: 100vh;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* 侧边栏 */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--md-sys-color-surface-container-low);
+            border-right: 1px solid var(--md-sys-color-outline-variant);
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--md-sys-color-outline-variant);
+        }
+
+        .sidebar-header .material-icons {
+            font-size: 32px;
+            color: var(--md-sys-color-primary);
+        }
+
+        .sidebar-header h1 {
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--md-sys-color-on-surface);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 12px 0;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            margin: 4px 12px;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--md-sys-color-on-surface);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: var(--md-sys-color-surface-container-highest);
+        }
+
+        .nav-item.active {
+            background: var(--md-sys-color-secondary-container);
+            color: var(--md-sys-color-on-secondary-container);
+        }
+
+        .nav-item .material-icons {
+            font-size: 24px;
+        }
+
+        /* 主内容区 */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 顶部导航栏 */
+        .top-bar {
+            height: var(--topbar-height);
+            background: var(--md-sys-color-surface);
+            border-bottom: 1px solid var(--md-sys-color-outline-variant);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--md-sys-color-on-surface-variant);
+            font-size: 14px;
+        }
+
+        .breadcrumb .material-icons {
+            font-size: 18px;
+        }
+
+        .breadcrumb-current {
+            color: var(--md-sys-color-on-surface);
+            font-weight: 500;
+        }
+
+        /* 内容区域 */
+        .content-area {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        /* 玩家筛选器 */
+        .player-filter-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border: 1px solid var(--md-sys-color-outline);
+            border-radius: 12px;
+            background: var(--md-sys-color-surface);
+            cursor: pointer;
+            position: relative;
+            min-width: 300px;
+            max-width: 500px;
+            transition: all 0.2s;
+        }
+
+        .player-filter-container:hover {
+            border-color: var(--md-sys-color-primary);
+        }
+
+        .player-filter-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            flex: 1;
+            min-height: 24px;
+            align-items: center;
+        }
+
+        .player-filter-placeholder {
+            color: var(--md-sys-color-on-surface-variant);
+            font-size: 14px;
+        }
+
+        .dropdown-arrow {
+            color: var(--md-sys-color-on-surface-variant);
+            font-size: 20px;
+            transition: transform 0.2s;
+        }
+
+        .player-filter-container.open .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .player-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            background: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .player-badge .remove-btn {
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .player-badge .remove-btn:hover {
+            opacity: 1;
+        }
+
+        .player-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 4px;
+            background: var(--md-sys-color-surface);
+            border: 1px solid var(--md-sys-color-outline);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .player-dropdown.show {
+            display: block;
+        }
+
+        .player-dropdown-item {
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 14px;
+        }
+
+        .player-dropdown-item:hover {
+            background: var(--md-sys-color-surface-container-high);
+        }
+
+        .player-dropdown-item.selected {
+            background: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+        }
+
+        .surface-card {
+            background: var(--md-sys-color-surface-container-low);
+            border-radius: 28px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .surface-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--md-sys-color-on-surface-variant);
+            letter-spacing: 0.1px;
+        }
+
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        .chart-wrapper {
+            background: var(--md-sys-color-surface-container);
+            padding: 24px;
+            border-radius: 28px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .chart-wrapper:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
+
+        .chart-wrapper h2 {
+            color: var(--md-sys-color-on-surface);
+            margin-bottom: 20px;
+            font-size: 22px;
+            font-weight: 400;
+            letter-spacing: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chart-wrapper h2 .material-icons {
+            color: var(--md-sys-color-primary);
+            font-size: 28px;
+        }
+
+        canvas {
+            max-height: 400px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--md-sys-color-on-surface-variant);
+        }
+
+        .loading .material-icons {
+            font-size: 48px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边栏 -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <span class="material-icons">analytics</span>
+                <h1>MC统计</h1>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-item active">
+                    <span class="material-icons">dashboard</span>
+                    <span>仪表盘</span>
+                </div>
+            </nav>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="main-content">
+            <!-- 顶部导航栏 -->
+            <div class="top-bar">
+                <div class="breadcrumb">
+                    <span class="material-icons">home</span>
+                    <span>/</span>
+                    <span class="breadcrumb-current">仪表盘</span>
+                </div>
+            </div>
+
+            <!-- 内容区域 -->
+            <div class="content-area">
+                <div id="loading" class="loading">
+                    <span class="material-icons">hourglass_empty</span>
+                    <p>正在加载数据...</p>
+                </div>
+
+                <div id="dashboard" style="display: none;">
+                    <div class="surface-card">
+                        <div class="form-group">
+                            <label>筛选玩家：</label>
+                            <div class="player-filter-container" id="filterContainer">
+                                <div class="player-filter-display" id="playerFilterDisplay">
+                                    <span class="player-filter-placeholder">全部玩家</span>
+                                </div>
+                                <span class="material-icons dropdown-arrow">expand_more</span>
+                                <div class="player-dropdown" id="playerDropdown"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="charts-container">
+                        <div class="chart-wrapper">
+                            <h2>
+                                <span class="material-icons">storage</span>
+                                地图文件夹大小趋势 (MB)
+                            </h2>
+                            <canvas id="mapSizeChart"></canvas>
+                        </div>
+
+                        <div class="chart-wrapper">
+                            <h2>
+                                <span class="material-icons">schedule</span>
+                                玩家游戏时长统计 (小时)
+                            </h2>
+                            <canvas id="playTimeChart"></canvas>
+                        </div>
+
+                        <div class="chart-wrapper">
+                            <h2>
+                                <span class="material-icons">dangerous</span>
+                                玩家死亡次数统计
+                            </h2>
+                            <canvas id="deathsChart"></canvas>
+                        </div>
+
+                        <div class="chart-wrapper">
+                            <h2>
+                                <span class="material-icons">pets</span>
+                                玩家击杀怪物数量
+                            </h2>
+                            <canvas id="mobKillsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="noData" class="surface-card" style="display: none;">
+                    <div class="loading">
+                        <span class="material-icons">info</span>
+                        <p>暂无数据，请先导入数据后刷新页面</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let charts = {};
+        let allPlayers = new Set();
+        let selectedPlayers = new Set();
+        let staticData = null;
+
+        // 加载静态数据
+        async function loadStaticData() {
+            try {
+                const response = await fetch('./data.json');
+                if (!response.ok) {
+                    throw new Error('无法加载数据文件');
+                }
+                staticData = await response.json();
+                return true;
+            } catch (error) {
+                console.error('加载数据失败:', error);
+                return false;
+            }
+        }
+
+        // 更新玩家筛选器
+        function updatePlayerFilter() {
+            const data = staticData.player_stats;
+            const dates = Object.keys(data);
+            dates.forEach(date => {
+                Object.keys(data[date]).forEach(player => allPlayers.add(player));
+            });
+
+            // 默认选中特定玩家
+            const defaultPlayers = ['MuxiAcio', 'RingOfficial', 'Roxy', 'hwj', 'roxy'];
+            selectedPlayers = new Set(defaultPlayers.filter(p => allPlayers.has(p)));
+
+            // 构建下拉选项
+            const dropdown = document.getElementById('playerDropdown');
+            const sortedPlayers = Array.from(allPlayers).sort();
+
+            let html = '<div class="player-dropdown-item" data-value="all">全部玩家</div>';
+            sortedPlayers.forEach(player => {
+                const isSelected = selectedPlayers.has(player);
+                html += `<div class="player-dropdown-item${isSelected ? ' selected' : ''}" data-value="${player}">${player}</div>`;
+            });
+            dropdown.innerHTML = html;
+
+            updatePlayerFilterDisplay();
+        }
+
+        // 更新筛选器显示
+        function updatePlayerFilterDisplay() {
+            const display = document.getElementById('playerFilterDisplay');
+            if (selectedPlayers.size === 0 || selectedPlayers.size === allPlayers.size) {
+                display.innerHTML = '<span class="player-filter-placeholder">全部玩家</span>';
+            } else {
+                const players = Array.from(selectedPlayers).sort();
+                const visiblePlayers = players.slice(0, 5);
+                const remainingCount = players.length - 5;
+
+                let html = '';
+                visiblePlayers.forEach(player => {
+                    html += `<span class="player-badge">${player}<span class="remove-btn" onclick="removePlayer(event, '${player}')">×</span></span>`;
+                });
+                if (remainingCount > 0) {
+                    html += `<span class="player-filter-placeholder">+${remainingCount}...</span>`;
+                }
+                display.innerHTML = html;
+            }
+        }
+
+        // 切换下拉框
+        function togglePlayerDropdown(event) {
+            event.stopPropagation();
+            const container = document.getElementById('filterContainer');
+            const dropdown = document.getElementById('playerDropdown');
+            container.classList.toggle('open');
+            dropdown.classList.toggle('show');
+        }
+
+        // 移除玩家
+        function removePlayer(event, player) {
+            event.stopPropagation();
+            selectedPlayers.delete(player);
+            updatePlayerDropdownSelection();
+            updatePlayerFilterDisplay();
+            loadAllCharts();
+        }
+
+        // 更新下拉框选中状态
+        function updatePlayerDropdownSelection() {
+            document.querySelectorAll('.player-dropdown-item').forEach(item => {
+                const value = item.dataset.value;
+                if (value === 'all') {
+                    item.classList.toggle('selected', selectedPlayers.size === allPlayers.size || selectedPlayers.size === 0);
+                } else {
+                    item.classList.toggle('selected', selectedPlayers.has(value));
+                }
+            });
+        }
+
+        // 点击其他地方关闭下拉框
+        document.addEventListener('click', function() {
+            document.getElementById('filterContainer').classList.remove('open');
+            document.getElementById('playerDropdown').classList.remove('show');
+        });
+
+        // 绑定下拉框点击事件
+        document.getElementById('playerDropdown').addEventListener('click', function(event) {
+            event.stopPropagation();
+            const item = event.target.closest('.player-dropdown-item');
+            if (!item) return;
+
+            const value = item.dataset.value;
+            if (value === 'all') {
+                selectedPlayers = new Set(allPlayers);
+            } else {
+                if (selectedPlayers.size === allPlayers.size) {
+                    selectedPlayers = new Set([value]);
+                } else if (selectedPlayers.has(value)) {
+                    selectedPlayers.delete(value);
+                    if (selectedPlayers.size === 0) {
+                        selectedPlayers = new Set(allPlayers);
+                    }
+                } else {
+                    selectedPlayers.add(value);
+                }
+            }
+
+            updatePlayerDropdownSelection();
+            updatePlayerFilterDisplay();
+            loadAllCharts();
+        });
+
+        // 加载所有图表
+        function loadAllCharts() {
+            loadMapSizeChart();
+            loadPlayerStatsChart('play_time', 'playTimeChart', '游戏时长 (小时)', (val) => (val / 3600).toFixed(1));
+            loadPlayerStatsChart('deaths', 'deathsChart', '死亡次数');
+            loadPlayerStatsChart('mob_kills', 'mobKillsChart', '击杀怪物数量');
+        }
+
+        function loadMapSizeChart() {
+            const data = staticData.map_sizes;
+            const dates = Object.keys(data).sort();
+            const mapNames = ['world', 'world_nether', 'world_the_end'];
+            const mapLabels = {
+                'world': '主世界',
+                'world_nether': '下界',
+                'world_the_end': '末地'
+            };
+
+            const datasets = mapNames.map((mapName, index) => {
+                const colors = ['#00D9FF', '#FF8A65', '#B388FF'];
+                return {
+                    label: mapLabels[mapName],
+                    data: dates.map(date => data[date][mapName] || 0),
+                    borderColor: colors[index],
+                    backgroundColor: colors[index] + '20',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 3,
+                    pointHoverRadius: 5
+                };
+            });
+
+            if (charts.mapSize) charts.mapSize.destroy();
+            const ctx = document.getElementById('mapSizeChart').getContext('2d');
+            charts.mapSize = new Chart(ctx, {
+                type: 'line',
+                data: { labels: dates, datasets: datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                padding: 20,
+                                font: { size: 12 }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: '大小 (MB)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function loadPlayerStatsChart(statType, chartId, label, valueTransform = null) {
+            const data = staticData.player_stats[statType] || {};
+            const dates = Object.keys(data).sort();
+            const filteredPlayers = Array.from(selectedPlayers).sort();
+            const colors = generateColors(filteredPlayers.length + 1);
+
+            const datasets = filteredPlayers.map((player, index) => ({
+                label: player,
+                data: dates.map(date => valueTransform ? valueTransform(data[date][player] || 0) : (data[date][player] || 0)),
+                borderColor: colors[index],
+                backgroundColor: colors[index] + '33',
+                tension: 0.4
+            }));
+
+            // 添加总计
+            const totalData = dates.map(date => {
+                const total = filteredPlayers.reduce((sum, player) => sum + (data[date][player] || 0), 0);
+                return valueTransform ? valueTransform(total) : total;
+            });
+            datasets.push({
+                label: '总计',
+                data: totalData,
+                borderColor: '#FF6B6B',
+                backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                borderWidth: 3,
+                tension: 0.4,
+                pointRadius: 4,
+                pointHoverRadius: 6
+            });
+
+            if (charts[chartId]) charts[chartId].destroy();
+            const ctx = document.getElementById(chartId).getContext('2d');
+            charts[chartId] = new Chart(ctx, {
+                type: 'line',
+                data: { labels: dates, datasets: datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                padding: 20,
+                                font: { size: 12 }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                footer: function(tooltipItems) {
+                                    let sum = 0;
+                                    tooltipItems.forEach(item => {
+                                        if (item.dataset.label !== '总计') {
+                                            sum += parseFloat(item.parsed.y);
+                                        }
+                                    });
+                                    return '各玩家总和: ' + sum.toFixed(1);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: label }
+                        }
+                    }
+                }
+            });
+        }
+
+        function generateColors(count) {
+            const colors = [];
+            for (let i = 0; i < count; i++) {
+                const hue = (i * 137.508) % 360;
+                colors.push(`hsl(${hue}, 70%, 50%)`);
+            }
+            return colors;
+        }
+
+        // 页面加载
+        window.addEventListener('load', async () => {
+            document.getElementById('filterContainer').addEventListener('click', togglePlayerDropdown);
+
+            const loaded = await loadStaticData();
+            document.getElementById('loading').style.display = 'none';
+
+            if (loaded && staticData.map_sizes && Object.keys(staticData.map_sizes).length > 0) {
+                document.getElementById('dashboard').style.display = 'block';
+                updatePlayerFilter();
+                loadAllCharts();
+            } else {
+                document.getElementById('noData').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

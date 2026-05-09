@@ -1,0 +1,499 @@
+{
+  "exported_at": "2026-05-09T10:10:23.791763",
+  "map_sizes": {
+    "2026-04-26": {
+      "world": 350.55,
+      "world_nether": 30.6,
+      "world_the_end": 2.1
+    },
+    "2026-05-01": {
+      "world": 366.41,
+      "world_nether": 30.6,
+      "world_the_end": 2.1
+    },
+    "2026-05-02": {
+      "world": 836.49,
+      "world_nether": 36.88,
+      "world_the_end": 2.1
+    },
+    "2026-05-03": {
+      "world": 919.13,
+      "world_nether": 41.67,
+      "world_the_end": 2.1
+    },
+    "2026-05-04": {
+      "world": 966.62,
+      "world_nether": 67.75,
+      "world_the_end": 2.1
+    },
+    "2026-05-05": {
+      "world": 1290.06,
+      "world_nether": 86.12,
+      "world_the_end": 2.1
+    }
+  },
+  "player_stats": {
+    "play_time": {
+      "2026-04-26": {
+        "MuxiAcio": 20451,
+        "RingOfficial": 22742,
+        "Roxy": 10280,
+        "hwj": 4907,
+        "roxy": 8840
+      },
+      "2026-05-01": {
+        "MuxiAcio": 34596,
+        "RingOfficial": 43368,
+        "Roxy": 30096,
+        "hwj": 4907,
+        "roxy": 8840
+      },
+      "2026-05-02": {
+        "MuxiAcio": 63542,
+        "RingOfficial": 74255,
+        "Roxy": 60497,
+        "hwj": 4907,
+        "roxy": 8840
+      },
+      "2026-05-03": {
+        "MuxiAcio": 90634,
+        "RingOfficial": 103831,
+        "Roxy": 90996,
+        "WitherSkeleton": 2549,
+        "hwj": 4907,
+        "roxy": 8840,
+        "ubot_RingOffic_1": 441
+      },
+      "2026-05-04": {
+        "DiamondCibqigan": 3902,
+        "MuxiAcio": 124379,
+        "NudsaGG": 5624,
+        "RingOfficial": 141483,
+        "Roxy": 127416,
+        "Ttui24": 3902,
+        "WitherSkeleton": 5674,
+        "dklkbot": 4157,
+        "hwj": 4907,
+        "roxy": 8840,
+        "spiderman": 4815,
+        "ubot_RingOffic_1": 13314,
+        "ubot_Roxy_1": 32791
+      },
+      "2026-05-05": {
+        "DiamondCibqigan": 4669,
+        "DiamondWizard": 5385,
+        "MuxiAcio": 151993,
+        "NudsaGG": 5624,
+        "Pinukimid": 24931,
+        "RingOfficial": 178779,
+        "Roxy": 163408,
+        "TheLemocmepnil": 5951,
+        "Ttui24": 4683,
+        "WitherSkeleton": 5674,
+        "dklkbot": 4157,
+        "hwj": 4907,
+        "iMage": 7336,
+        "roxy": 8840,
+        "spiderman": 4815,
+        "ubot_RingOffic_1": 13314,
+        "ubot_Roxy_1": 58345
+      }
+    },
+    "deaths": {
+      "2026-04-26": {
+        "MuxiAcio": 36,
+        "RingOfficial": 45,
+        "Roxy": 32,
+        "hwj": 27,
+        "roxy": 38
+      },
+      "2026-05-01": {
+        "MuxiAcio": 42,
+        "RingOfficial": 50,
+        "Roxy": 87,
+        "hwj": 27,
+        "roxy": 38
+      },
+      "2026-05-02": {
+        "MuxiAcio": 57,
+        "RingOfficial": 57,
+        "Roxy": 117,
+        "hwj": 27,
+        "roxy": 38
+      },
+      "2026-05-03": {
+        "MuxiAcio": 91,
+        "RingOfficial": 101,
+        "Roxy": 140,
+        "WitherSkeleton": 0,
+        "hwj": 27,
+        "roxy": 38,
+        "ubot_RingOffic_1": 0
+      },
+      "2026-05-04": {
+        "DiamondCibqigan": 0,
+        "MuxiAcio": 106,
+        "NudsaGG": 1,
+        "RingOfficial": 134,
+        "Roxy": 186,
+        "Ttui24": 0,
+        "WitherSkeleton": 1,
+        "dklkbot": 1,
+        "hwj": 27,
+        "roxy": 38,
+        "spiderman": 1,
+        "ubot_RingOffic_1": 3,
+        "ubot_Roxy_1": 0
+      },
+      "2026-05-05": {
+        "DiamondCibqigan": 1,
+        "DiamondWizard": 0,
+        "MuxiAcio": 112,
+        "NudsaGG": 1,
+        "Pinukimid": 0,
+        "RingOfficial": 134,
+        "Roxy": 198,
+        "TheLemocmepnil": 1,
+        "Ttui24": 1,
+        "WitherSkeleton": 1,
+        "dklkbot": 1,
+        "hwj": 27,
+        "iMage": 1,
+        "roxy": 38,
+        "spiderman": 1,
+        "ubot_RingOffic_1": 3,
+        "ubot_Roxy_1": 1
+      }
+    },
+    "mob_kills": {
+      "2026-04-26": {
+        "MuxiAcio": 197,
+        "RingOfficial": 60,
+        "Roxy": 55,
+        "hwj": 11,
+        "roxy": 88
+      },
+      "2026-05-01": {
+        "MuxiAcio": 212,
+        "RingOfficial": 95,
+        "Roxy": 221,
+        "hwj": 11,
+        "roxy": 88
+      },
+      "2026-05-02": {
+        "MuxiAcio": 261,
+        "RingOfficial": 935,
+        "Roxy": 522,
+        "hwj": 11,
+        "roxy": 88
+      },
+      "2026-05-03": {
+        "MuxiAcio": 1151,
+        "RingOfficial": 1217,
+        "Roxy": 613,
+        "WitherSkeleton": 0,
+        "hwj": 11,
+        "roxy": 88,
+        "ubot_RingOffic_1": 0
+      },
+      "2026-05-04": {
+        "DiamondCibqigan": 0,
+        "MuxiAcio": 1747,
+        "NudsaGG": 0,
+        "RingOfficial": 4041,
+        "Roxy": 1134,
+        "Ttui24": 0,
+        "WitherSkeleton": 0,
+        "dklkbot": 0,
+        "hwj": 11,
+        "roxy": 88,
+        "spiderman": 0,
+        "ubot_RingOffic_1": 0,
+        "ubot_Roxy_1": 0
+      },
+      "2026-05-05": {
+        "DiamondCibqigan": 0,
+        "DiamondWizard": 0,
+        "MuxiAcio": 2769,
+        "NudsaGG": 0,
+        "Pinukimid": 0,
+        "RingOfficial": 4530,
+        "Roxy": 3984,
+        "TheLemocmepnil": 0,
+        "Ttui24": 0,
+        "WitherSkeleton": 0,
+        "dklkbot": 0,
+        "hwj": 11,
+        "iMage": 0,
+        "roxy": 88,
+        "spiderman": 0,
+        "ubot_RingOffic_1": 0,
+        "ubot_Roxy_1": 0
+      }
+    },
+    "player_kills": {
+      "2026-04-26": {
+        "MuxiAcio": 3,
+        "RingOfficial": 1,
+        "Roxy": 0,
+        "hwj": 1,
+        "roxy": 0
+      },
+      "2026-05-01": {
+        "MuxiAcio": 4,
+        "RingOfficial": 1,
+        "Roxy": 0,
+        "hwj": 1,
+        "roxy": 0
+      },
+      "2026-05-02": {
+        "MuxiAcio": 4,
+        "RingOfficial": 1,
+        "Roxy": 0,
+        "hwj": 1,
+        "roxy": 0
+      },
+      "2026-05-03": {
+        "MuxiAcio": 5,
+        "RingOfficial": 1,
+        "Roxy": 0,
+        "WitherSkeleton": 0,
+        "hwj": 1,
+        "roxy": 0,
+        "ubot_RingOffic_1": 0
+      },
+      "2026-05-04": {
+        "DiamondCibqigan": 0,
+        "MuxiAcio": 6,
+        "NudsaGG": 0,
+        "RingOfficial": 2,
+        "Roxy": 0,
+        "Ttui24": 0,
+        "WitherSkeleton": 0,
+        "dklkbot": 0,
+        "hwj": 1,
+        "roxy": 0,
+        "spiderman": 0,
+        "ubot_RingOffic_1": 0,
+        "ubot_Roxy_1": 0
+      },
+      "2026-05-05": {
+        "DiamondCibqigan": 0,
+        "DiamondWizard": 0,
+        "MuxiAcio": 6,
+        "NudsaGG": 0,
+        "Pinukimid": 0,
+        "RingOfficial": 2,
+        "Roxy": 1,
+        "TheLemocmepnil": 0,
+        "Ttui24": 0,
+        "WitherSkeleton": 0,
+        "dklkbot": 0,
+        "hwj": 1,
+        "iMage": 0,
+        "roxy": 0,
+        "spiderman": 0,
+        "ubot_RingOffic_1": 0,
+        "ubot_Roxy_1": 0
+      }
+    },
+    "damage_dealt": {
+      "2026-04-26": {
+        "MuxiAcio": 28686,
+        "RingOfficial": 10391,
+        "Roxy": 12376,
+        "hwj": 2015,
+        "roxy": 12722
+      },
+      "2026-05-01": {
+        "MuxiAcio": 34068,
+        "RingOfficial": 16118,
+        "Roxy": 34797,
+        "hwj": 2015,
+        "roxy": 12722
+      },
+      "2026-05-02": {
+        "MuxiAcio": 42450,
+        "RingOfficial": 60755,
+        "Roxy": 69066,
+        "hwj": 2015,
+        "roxy": 12722
+      },
+      "2026-05-03": {
+        "MuxiAcio": 137108,
+        "RingOfficial": 78473,
+        "Roxy": 88318,
+        "WitherSkeleton": 0,
+        "hwj": 2015,
+        "roxy": 12722,
+        "ubot_RingOffic_1": 0
+      },
+      "2026-05-04": {
+        "DiamondCibqigan": 0,
+        "MuxiAcio": 168144,
+        "NudsaGG": 0,
+        "RingOfficial": 153173,
+        "Roxy": 108837,
+        "Ttui24": 0,
+        "WitherSkeleton": 0,
+        "dklkbot": 0,
+        "hwj": 2015,
+        "roxy": 12722,
+        "spiderman": 0,
+        "ubot_RingOffic_1": 0,
+        "ubot_Roxy_1": 0
+      },
+      "2026-05-05": {
+        "DiamondCibqigan": 0,
+        "DiamondWizard": 0,
+        "MuxiAcio": 187628,
+        "NudsaGG": 0,
+        "Pinukimid": 0,
+        "RingOfficial": 167404,
+        "Roxy": 158690,
+        "TheLemocmepnil": 0,
+        "Ttui24": 0,
+        "WitherSkeleton": 0,
+        "dklkbot": 0,
+        "hwj": 2015,
+        "iMage": 0,
+        "roxy": 12722,
+        "spiderman": 0,
+        "ubot_RingOffic_1": 0,
+        "ubot_Roxy_1": 0
+      }
+    },
+    "distance_walked": {
+      "2026-04-26": {
+        "MuxiAcio": 27079,
+        "RingOfficial": 23356,
+        "Roxy": 8389,
+        "hwj": 5451,
+        "roxy": 7550
+      },
+      "2026-05-01": {
+        "MuxiAcio": 46013,
+        "RingOfficial": 37760,
+        "Roxy": 16913,
+        "hwj": 5451,
+        "roxy": 7550
+      },
+      "2026-05-02": {
+        "MuxiAcio": 71452,
+        "RingOfficial": 54704,
+        "Roxy": 26893,
+        "hwj": 5451,
+        "roxy": 7550
+      },
+      "2026-05-03": {
+        "MuxiAcio": 98352,
+        "RingOfficial": 67968,
+        "Roxy": 36981,
+        "WitherSkeleton": 0,
+        "hwj": 5451,
+        "roxy": 7550,
+        "ubot_RingOffic_1": 0
+      },
+      "2026-05-04": {
+        "DiamondCibqigan": 0,
+        "MuxiAcio": 119213,
+        "NudsaGG": 0,
+        "RingOfficial": 84779,
+        "Roxy": 49939,
+        "Ttui24": 0,
+        "WitherSkeleton": 0,
+        "dklkbot": 0,
+        "hwj": 5451,
+        "roxy": 7550,
+        "spiderman": 0,
+        "ubot_RingOffic_1": 0,
+        "ubot_Roxy_1": 0
+      },
+      "2026-05-05": {
+        "DiamondCibqigan": 0,
+        "DiamondWizard": 0,
+        "MuxiAcio": 140261,
+        "NudsaGG": 0,
+        "Pinukimid": 0,
+        "RingOfficial": 108052,
+        "Roxy": 59497,
+        "TheLemocmepnil": 0,
+        "Ttui24": 0,
+        "WitherSkeleton": 0,
+        "dklkbot": 0,
+        "hwj": 5451,
+        "iMage": 0,
+        "roxy": 7550,
+        "spiderman": 0,
+        "ubot_RingOffic_1": 0,
+        "ubot_Roxy_1": 0
+      }
+    },
+    "jumps": {
+      "2026-04-26": {
+        "MuxiAcio": 3174,
+        "RingOfficial": 4334,
+        "Roxy": 2538,
+        "hwj": 683,
+        "roxy": 2151
+      },
+      "2026-05-01": {
+        "MuxiAcio": 4342,
+        "RingOfficial": 7284,
+        "Roxy": 7967,
+        "hwj": 683,
+        "roxy": 2151
+      },
+      "2026-05-02": {
+        "MuxiAcio": 9274,
+        "RingOfficial": 14026,
+        "Roxy": 15018,
+        "hwj": 683,
+        "roxy": 2151
+      },
+      "2026-05-03": {
+        "MuxiAcio": 11683,
+        "RingOfficial": 16885,
+        "Roxy": 21385,
+        "WitherSkeleton": 0,
+        "hwj": 683,
+        "roxy": 2151,
+        "ubot_RingOffic_1": 0
+      },
+      "2026-05-04": {
+        "DiamondCibqigan": 0,
+        "MuxiAcio": 15139,
+        "NudsaGG": 0,
+        "RingOfficial": 21031,
+        "Roxy": 30283,
+        "Ttui24": 0,
+        "WitherSkeleton": 0,
+        "dklkbot": 0,
+        "hwj": 683,
+        "roxy": 2151,
+        "spiderman": 0,
+        "ubot_RingOffic_1": 0,
+        "ubot_Roxy_1": 0
+      },
+      "2026-05-05": {
+        "DiamondCibqigan": 0,
+        "DiamondWizard": 0,
+        "MuxiAcio": 18409,
+        "NudsaGG": 0,
+        "Pinukimid": 0,
+        "RingOfficial": 27255,
+        "Roxy": 38856,
+        "TheLemocmepnil": 0,
+        "Ttui24": 0,
+        "WitherSkeleton": 0,
+        "dklkbot": 0,
+        "hwj": 683,
+        "iMage": 0,
+        "roxy": 2151,
+        "spiderman": 0,
+        "ubot_RingOffic_1": 0,
+        "ubot_Roxy_1": 0
+      }
+    }
+  }
+}
