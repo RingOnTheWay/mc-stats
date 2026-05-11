@@ -83,13 +83,39 @@ def export_battle_stats():
     return battle_data
 
 
+def export_craft_stats():
+    """导出物品合成/使用统计数据"""
+    conn = sqlite3.connect(DB_FILE)
+    cursor = conn.cursor()
+
+    craft_data = {}
+    cursor.execute('''
+        SELECT date, player_name, stat_category, stat_key, stat_value
+        FROM craft_stats
+        ORDER BY date, player_name
+    ''')
+
+    for date, player_name, stat_category, stat_key, stat_value in cursor.fetchall():
+        if stat_category not in craft_data:
+            craft_data[stat_category] = {}
+        if date not in craft_data[stat_category]:
+            craft_data[stat_category][date] = {}
+        if player_name not in craft_data[stat_category][date]:
+            craft_data[stat_category][date][player_name] = {}
+        craft_data[stat_category][date][player_name][stat_key] = stat_value
+
+    conn.close()
+    return craft_data
+
+
 def export_all_data():
     """导出所有数据"""
     return {
         'exported_at': datetime.now().isoformat(),
         'map_sizes': export_map_sizes(),
         'player_stats': export_player_stats(),
-        'battle_stats': export_battle_stats()
+        'battle_stats': export_battle_stats(),
+        'craft_stats': export_craft_stats()
     }
 
 
@@ -110,6 +136,7 @@ def main():
     print(f"- 地图尺寸记录：{len(data['map_sizes'])} 天")
     print(f"- 玩家统计类型：{len(data['player_stats'])} 种")
     print(f"- 战斗统计类别：{len(data['battle_stats'])} 种")
+    print(f"- 物品合成类别：{len(data['craft_stats'])} 种")
 
     # 显示日期范围
     dates = sorted(data['map_sizes'].keys())

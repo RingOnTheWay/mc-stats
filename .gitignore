@@ -22,6 +22,7 @@ mc_stats_server.py
 requirements.txt
 pyproject.toml
 uv.lock
+server_example/
 
 # 其他
 *.db.bak
