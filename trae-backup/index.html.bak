@@ -254,12 +254,6 @@
             max-height: 300px;
             overflow-y: auto;
             z-index: 1000;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-
-        .player-dropdown::-webkit-scrollbar {
-            display: none;
         }
 
         .player-dropdown.show {
@@ -267,9 +261,6 @@
         }
 
         .player-dropdown-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
             padding: 10px 16px;
             cursor: pointer;
             transition: background 0.2s;
@@ -285,15 +276,6 @@
             color: var(--md-sys-color-on-primary-container);
         }
 
-        .player-dropdown-item .check-icon {
-            display: none;
-        }
-
-        .player-dropdown-item.selected .check-icon {
-            display: inline-flex;
-            font-size: 18px;
-        }
-
         .surface-card {
             background: var(--md-sys-color-surface-container-low);
             border-radius: 28px;
@@ -307,295 +289,8 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.08);
         }
 
-        .surface-card h2 {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-            font-size: 22px;
-            font-weight: 400;
-            color: var(--md-sys-color-on-surface);
-        }
-
-        .surface-card h2 .material-icons {
-            color: var(--md-sys-color-primary);
-            font-size: 28px;
-        }
-
-        /* Material You 风格自定义下拉框 */
-        .custom-select {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            padding: 12px 16px;
-            width: 100%;
-            height: 42px;
-            box-sizing: border-box;
-            border-radius: 12px;
-            border: 1px solid var(--md-sys-color-outline);
-            background: var(--md-sys-color-surface);
-            cursor: pointer;
-            color: var(--md-sys-color-on-surface);
-            font-family: inherit;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .custom-select:hover {
-            border-color: var(--md-sys-color-primary);
-        }
-
-        .custom-select:focus-within {
-            outline: none;
-            border-color: var(--md-sys-color-primary);
-            box-shadow: 0 0 0 2px var(--md-sys-color-primary-container);
-        }
-
-        .custom-select .select-arrow {
-            font-size: 20px;
-            color: var(--md-sys-color-on-surface-variant);
-            transition: transform 0.2s;
-        }
-
-        .custom-select.open .select-arrow {
-            transform: rotate(180deg);
-        }
-
-        .select-dropdown {
-            display: none;
-            position: absolute;
-            z-index: 1000;
-            margin-top: 4px;
-            padding: 4px;
-            border-radius: 12px;
-            background: var(--md-sys-color-surface);
-            border: 1px solid var(--md-sys-color-outline);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            max-height: 200px;
-            overflow-y: auto;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-
-        .select-dropdown::-webkit-scrollbar {
-            display: none;
-        }
-
-        .select-dropdown.show {
-            display: block;
-        }
-
-        .select-dropdown-item {
-            padding: 10px 16px;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: background 0.2s;
-            font-size: 14px;
-            color: var(--md-sys-color-on-surface);
-        }
-
-        .select-dropdown-item:hover {
-            background: var(--md-sys-color-surface-container-high);
-        }
-
-        .select-dropdown-item.selected {
-            background: var(--md-sys-color-primary-container);
-            color: var(--md-sys-color-on-primary-container);
-        }
-
-        .select-dropdown-item.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Material You 风格多选容器 */
-        .multi-select-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            padding: 12px 16px;
-            width: 100%;
-            height: 42px;
-            box-sizing: border-box;
-            border-radius: 12px;
-            border: 1px solid var(--md-sys-color-outline);
-            background: var(--md-sys-color-surface);
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .multi-select-container:hover {
-            border-color: var(--md-sys-color-primary);
-        }
-
-        .multi-select-container.open {
-            border-color: var(--md-sys-color-primary);
-            box-shadow: 0 0 0 2px var(--md-sys-color-primary-container);
-        }
-
-        .multi-select-chips {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 6px;
-            flex: 1;
-            min-height: 24px;
-        }
-
-        .multi-select-placeholder {
-            color: var(--md-sys-color-on-surface-variant);
-            font-size: 14px;
-        }
-
-        .multi-select-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px 10px;
-            background: var(--md-sys-color-primary-container);
-            color: var(--md-sys-color-on-primary-container);
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .multi-select-chip .remove-btn {
-            cursor: pointer;
-            opacity: 0.7;
-            font-size: 16px;
-            line-height: 1;
-        }
-
-        .multi-select-chip .remove-btn:hover {
-            opacity: 1;
-        }
-
-        .multi-select-arrow {
-            font-size: 20px;
-            color: var(--md-sys-color-on-surface-variant);
-            transition: transform 0.2s;
-            flex-shrink: 0;
-        }
-
-        .multi-select-container.open .multi-select-arrow {
-            transform: rotate(180deg);
-        }
-
-        .multi-select-dropdown {
-            display: none;
-            position: absolute;
-            z-index: 1000;
-            margin-top: 4px;
-            padding: 0;
-            border-radius: 12px;
-            background: var(--md-sys-color-surface);
-            border: 1px solid var(--md-sys-color-outline);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            min-width: 280px;
-            max-height: 300px;
-            overflow: hidden;
-            flex-direction: column;
-        }
-
-        .multi-select-dropdown.show {
-            display: flex;
-        }
-
-        .dropdown-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--md-sys-color-outline-variant);
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--md-sys-color-on-surface);
-        }
-
-        .select-all-btn {
-            background: none;
-            border: none;
-            color: var(--md-sys-color-primary);
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 6px;
-        }
-
-        .select-all-btn:hover {
-            background: var(--md-sys-color-primary-container);
-        }
-
-        .dropdown-content {
-            overflow-y: auto;
-            max-height: 240px;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-
-        .dropdown-content::-webkit-scrollbar {
-            display: none;
-        }
-
-        .dropdown-option {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 16px;
-            cursor: pointer;
-            transition: background 0.2s;
-            font-size: 14px;
-            color: var(--md-sys-color-on-surface);
-        }
-
-        .dropdown-option:hover {
-            background: var(--md-sys-color-surface-container-high);
-        }
-
-        .dropdown-option.selected {
-            background: var(--md-sys-color-primary-container);
-            color: var(--md-sys-color-on-primary-container);
-        }
-
-        .dropdown-option .checkbox {
-            width: 18px;
-            height: 18px;
-            border: 2px solid var(--md-sys-color-outline);
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .dropdown-option.selected .checkbox {
-            background: var(--md-sys-color-primary);
-            border-color: var(--md-sys-color-primary);
-        }
-
-        .dropdown-option .checkbox::after {
-            content: '';
-            display: none;
-            width: 5px;
-            height: 10px;
-            border: solid var(--md-sys-color-on-primary);
-            border-width: 0 2px 2px 0;
-            transform: rotate(45deg);
-            margin-top: -2px;
-        }
-
-        .dropdown-option.selected .checkbox::after {
-            display: block;
-        }
-
         .form-group {
             margin-bottom: 16px;
-            position: relative;
         }
 
         .form-group:last-child {
@@ -896,8 +591,6 @@
         select {
             width: 100%;
             padding: 12px 16px;
-            height: 42px;
-            box-sizing: border-box;
             border: 1px solid var(--md-sys-color-outline);
             border-radius: 12px;
             font-size: 14px;
@@ -911,115 +604,6 @@
             outline: none;
             border-color: var(--md-sys-color-primary);
             box-shadow: 0 0 0 2px var(--md-sys-color-primary-container);
-        }
-
-        /* Material You 风格日期输入 */
-        .date-input {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            padding: 12px 16px;
-            width: 100%;
-            min-width: 0;
-            box-sizing: border-box;
-            border-radius: 12px;
-            border: 1px solid var(--md-sys-color-outline);
-            background: var(--md-sys-color-surface);
-            cursor: pointer;
-            color: var(--md-sys-color-on-surface);
-            font-family: inherit;
-            font-size: 14px;
-            line-height: 1.5;
-            height: 42px;
-        }
-
-        .date-input:hover {
-            border-color: var(--md-sys-color-primary);
-        }
-
-        .date-input:focus-within {
-            outline: none;
-            border-color: var(--md-sys-color-primary);
-            box-shadow: 0 0 0 2px var(--md-sys-color-primary-container);
-        }
-
-        .date-input .date-icon {
-            font-size: 20px;
-            color: var(--md-sys-color-on-surface-variant);
-        }
-
-        /* 日期选择浮层 */
-        .date-picker {
-            position: absolute;
-            z-index: 1000;
-            margin-top: 4px;
-            padding: 12px;
-            border-radius: 16px;
-            background: var(--md-sys-color-surface-container-high);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-            min-width: 260px;
-        }
-
-        .date-picker-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .date-picker-header button {
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            padding: 4px;
-            border-radius: 999px;
-            color: var(--md-sys-color-on-surface-variant);
-        }
-
-        .date-picker-header button:hover {
-            background: var(--md-sys-color-surface-container);
-        }
-
-        .date-picker-title {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--md-sys-color-on-surface);
-        }
-
-        .date-picker-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-            font-size: 12px;
-        }
-
-        .date-picker-weekday {
-            text-align: center;
-            color: var(--md-sys-color-on-surface-variant);
-            padding: 4px 0;
-        }
-
-        .date-picker-day {
-            text-align: center;
-            padding: 4px 0;
-            border-radius: 999px;
-            cursor: pointer;
-            color: var(--md-sys-color-on-surface);
-        }
-
-        .date-picker-day.disabled {
-            opacity: 0.3;
-            cursor: default;
-        }
-
-        .date-picker-day.today {
-            border: 1px solid var(--md-sys-color-primary);
-        }
-
-        .date-picker-day.selected {
-            background: var(--md-sys-color-primary);
-            color: var(--md-sys-color-on-primary);
         }
 
         .folder-input-group {
@@ -1269,11 +853,7 @@
                         </div>
                         <div class="form-group">
                             <label>日期：</label>
-                            <div class="date-input" id="scanDateWrapper" onclick="openDatePicker(event)">
-                                <span id="scanDateDisplay">选择日期</span>
-                                <span class="material-icons date-icon">event</span>
-                            </div>
-                            <input type="hidden" id="scanDate">
+                            <input type="date" id="scanDate">
                         </div>
                         <button onclick="scanData()" class="btn btn-primary">
                             <span class="material-icons">radar</span>
@@ -1305,12 +885,9 @@
                         <h2><span class="material-icons">delete</span> 删除单日数据</h2>
                         <div class="form-group">
                             <label>选择日期：</label>
-                            <div class="custom-select" id="deleteDateWrapper" onclick="openDeleteDatePicker(event)">
-                                <span id="deleteDateDisplay">选择日期</span>
-                                <span class="material-icons select-arrow">arrow_drop_down</span>
-                            </div>
-                            <input type="hidden" id="deleteDate">
-                            <div class="select-dropdown" id="deleteDateDropdown"></div>
+                            <select id="deleteDate">
+                                <option value="">加载中...</option>
+                            </select>
                         </div>
                         <button onclick="deleteData()" class="btn btn-danger">
                             <span class="material-icons">delete_forever</span>
@@ -1320,21 +897,11 @@
                     </div>
 
                     <div class="surface-card">
-                        <h2><span class="material-icons">delete_sweep</span> 批量删除</h2>
+                        <h2><span class="material-icons">library_delete</span> 批量删除</h2>
                         <div class="form-group">
                             <label>选择日期（可多选）：</label>
-                            <div class="multi-select-container" id="batchDeleteContainer" onclick="toggleBatchDeleteDropdown(event)">
-                                <div class="multi-select-chips" id="batchDeleteChips">
-                                    <span class="multi-select-placeholder">点击选择日期...</span>
-                                </div>
-                                <span class="material-icons multi-select-arrow">arrow_drop_down</span>
-                            </div>
-                            <div class="multi-select-dropdown" id="batchDeleteDropdown">
-                                <div class="dropdown-header">
-                                    <span>选择日期</span>
-                                    <button class="select-all-btn" onclick="toggleSelectAllDates(event)">全选</button>
-                                </div>
-                                <div class="dropdown-content" id="batchDeleteContent"></div>
+                            <div id="batchDeleteDates" class="date-checkboxes">
+                                <span class="loading">加载中...</span>
                             </div>
                         </div>
                         <button onclick="batchDelete()" class="btn btn-danger">
@@ -1446,10 +1013,10 @@
             }
             const sortedPlayers = Array.from(allPlayers).sort();
 
-            let html = '<div class="player-dropdown-item" data-value="all">全部玩家<span class="material-icons check-icon">check</span></div>';
+            let html = '<div class="player-dropdown-item" data-value="all">全部玩家</div>';
             sortedPlayers.forEach(player => {
                 const isSelected = selectedPlayers.has(player);
-                html += `<div class="player-dropdown-item${isSelected ? ' selected' : ''}" data-value="${player}">${player}<span class="material-icons check-icon">check</span></div>`;
+                html += `<div class="player-dropdown-item${isSelected ? ' selected' : ''}" data-value="${player}">${player}</div>`;
             });
             dropdown.innerHTML = html;
 
@@ -1486,15 +1053,6 @@
             dropdown.classList.toggle('show');
         }
 
-        // 切换战斗筛选下拉框
-        function toggleBattleDropdown(event) {
-            event.stopPropagation();
-            const container = document.getElementById('battleFilterContainer');
-            const dropdown = document.getElementById('battlePlayerDropdown');
-            container.classList.toggle('open');
-            dropdown.classList.toggle('show');
-        }
-
         // 移除玩家
         function removePlayer(event, player) {
             event.stopPropagation();
@@ -1520,8 +1078,6 @@
         document.addEventListener('click', function() {
             document.getElementById('filterContainer').classList.remove('open');
             document.getElementById('playerDropdown').classList.remove('show');
-            document.getElementById('battleFilterContainer').classList.remove('open');
-            document.getElementById('battlePlayerDropdown').classList.remove('show');
         });
 
         // 绑定下拉框点击事件
@@ -1842,14 +1398,8 @@
                 if (el) {
                     el.style.display = 'block';
                     if (bc) bc.textContent = '数据扫描';
-                    const scanInput = document.getElementById('scanDate');
-                    const scanDisplay = document.getElementById('scanDateDisplay');
-                    if (scanInput && scanDisplay && !scanInput.value) {
-                        const now = new Date();
-                        const iso = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-                        scanInput.value = iso;
-                        scanDisplay.textContent = iso;
-                    }
+                    const scanDate = document.getElementById('scanDate');
+                    if (scanDate) scanDate.valueAsDate = new Date();
                 }
             } else if (tabName === 'manage') {
                 const el = document.getElementById('tab-manage');
@@ -1927,13 +1477,10 @@
 
                 // 初始化玩家筛选器（确保下拉元素存在）
                 const dropdownEl = document.getElementById('battlePlayerDropdown');
-                const containerEl = document.getElementById('battleFilterContainer');
                 if (!dropdownEl) {
                     console.warn('battlePlayerDropdown 元素缺失，跳过初始化筛选器');
                 } else {
                     initBattlePlayerFilter();
-                    // 绑定战斗筛选器点击事件
-                    containerEl?.addEventListener('click', toggleBattleDropdown);
                 }
 
                 // 加载图表（确保画布存在）
@@ -1956,10 +1503,10 @@
             const dropdown = document.getElementById('battlePlayerDropdown');
             const sortedPlayers = Array.from(battleAllPlayers).sort();
 
-            let html = '<div class="player-dropdown-item" data-value="all">全部玩家<span class="material-icons check-icon">check</span></div>';
+            let html = '<div class="player-dropdown-item" data-value="all">全部玩家</div>';
             sortedPlayers.forEach(player => {
                 const isSelected = selectedBattlePlayers.has(player);
-                html += `<div class="player-dropdown-item${isSelected ? ' selected' : ''}" data-value="${player}">${player}<span class="material-icons check-icon">check</span></div>`;
+                html += `<div class="player-dropdown-item${isSelected ? ' selected' : ''}" data-value="${player}">${player}</div>`;
             });
             dropdown.innerHTML = html;
 
@@ -2165,141 +1712,6 @@
             });
         }
 
-        // ================== 自定义日期选择组件 ==================
-        let activeDatePicker = null;
-        let datePickerState = {
-            year: null,
-            month: null,
-            inputId: null
-        };
-
-        function openDatePicker(event) {
-            event.stopPropagation();
-            const wrapper = document.getElementById('scanDateWrapper');
-            const input = document.getElementById('scanDate');
-            const display = document.getElementById('scanDateDisplay');
-
-            if (activeDatePicker) {
-                closeDatePicker();
-                return;
-            }
-
-            let baseDate = new Date();
-            if (input.value) {
-                const parts = input.value.split('-');
-                if (parts.length === 3) {
-                    const y = parseInt(parts[0], 10);
-                    const m = parseInt(parts[1], 10) - 1;
-                    const d = parseInt(parts[2], 10);
-                    if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
-                        baseDate = new Date(y, m, d);
-                    }
-                }
-            }
-            datePickerState.year = baseDate.getFullYear();
-            datePickerState.month = baseDate.getMonth();
-            datePickerState.inputId = 'scanDate';
-
-            const picker = document.createElement('div');
-            picker.className = 'date-picker';
-            picker.innerHTML = buildDatePickerHtml(datePickerState.year, datePickerState.month, input.value);
-
-            picker.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const action = e.target.closest('[data-action]')?.dataset.action;
-                if (action === 'prev') {
-                    changeMonth(-1);
-                    picker.innerHTML = buildDatePickerHtml(datePickerState.year, datePickerState.month, input.value);
-                } else if (action === 'next') {
-                    changeMonth(1);
-                    picker.innerHTML = buildDatePickerHtml(datePickerState.year, datePickerState.month, input.value);
-                } else if (e.target.classList.contains('date-picker-day') && !e.target.classList.contains('disabled')) {
-                    const y = parseInt(e.target.dataset.year, 10);
-                    const m = parseInt(e.target.dataset.month, 10);
-                    const d = parseInt(e.target.dataset.day, 10);
-                    const iso = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-                    input.value = iso;
-                    display.textContent = iso;
-                    closeDatePicker();
-                }
-            });
-
-            const rect = wrapper.getBoundingClientRect();
-            picker.style.position = 'absolute';
-            picker.style.left = rect.left + 'px';
-            picker.style.top = (rect.bottom + window.scrollY) + 'px';
-
-            document.body.appendChild(picker);
-            activeDatePicker = picker;
-
-            document.addEventListener('click', closeDatePickerOnOutside);
-        }
-
-        function closeDatePicker() {
-            if (activeDatePicker && activeDatePicker.parentNode) {
-                activeDatePicker.parentNode.removeChild(activeDatePicker);
-            }
-            activeDatePicker = null;
-            document.removeEventListener('click', closeDatePickerOnOutside);
-        }
-
-        function closeDatePickerOnOutside() {
-            closeDatePicker();
-        }
-
-        function changeMonth(delta) {
-            let m = datePickerState.month + delta;
-            let y = datePickerState.year;
-            if (m < 0) { m = 11; y--; }
-            if (m > 11) { m = 0; y++; }
-            datePickerState.month = m;
-            datePickerState.year = y;
-        }
-
-        function buildDatePickerHtml(year, month, selectedIso) {
-            const today = new Date();
-            const selected = selectedIso ? new Date(selectedIso) : null;
-
-            const firstDay = new Date(year, month, 1);
-            const startWeekday = firstDay.getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-            const monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
-            const weekdays = ['日','一','二','三','四','五','六'];
-
-            let html = `
-                <div class="date-picker-header">
-                    <button type="button" data-action="prev"><span class="material-icons">chevron_left</span></button>
-                    <div class="date-picker-title">${year}年 ${monthNames[month]}</div>
-                    <button type="button" data-action="next"><span class="material-icons">chevron_right</span></button>
-                </div>
-                <div class="date-picker-grid">
-            `;
-
-            weekdays.forEach(w => {
-                html += `<div class="date-picker-weekday">${w}</div>`;
-            });
-
-            for (let i = 0; i < startWeekday; i++) {
-                html += `<div></div>`;
-            }
-
-            for (let d = 1; d <= daysInMonth; d++) {
-                const current = new Date(year, month, d);
-                const isToday = current.toDateString() === today.toDateString();
-                const isSelected = selected && current.toDateString() === selected.toDateString();
-
-                let cls = 'date-picker-day';
-                if (isToday) cls += ' today';
-                if (isSelected) cls += ' selected';
-
-                html += `<div class="${cls}" data-year="${year}" data-month="${month}" data-day="${d}">${d}</div>`;
-            }
-
-            html += '</div>';
-            return html;
-        }
-
         // 数据扫描相关函数
         async function selectServerFolder() {
             try {
@@ -2419,196 +1831,23 @@
             }
         }
 
-        // 自定义日期选择下拉框
-        let selectedBatchDates = new Set();
-        
-        function openDeleteDatePicker(event) {
-            event.stopPropagation();
-            const wrapper = document.getElementById('deleteDateWrapper');
-            const dropdown = document.getElementById('deleteDateDropdown');
-            
-            wrapper.classList.toggle('open');
-            dropdown.classList.toggle('show');
-            
-            if (dropdown.classList.contains('show')) {
-                const rect = wrapper.getBoundingClientRect();
-                const formGroupRect = wrapper.parentElement.getBoundingClientRect();
-                dropdown.style.position = 'absolute';
-                dropdown.style.left = (rect.left - formGroupRect.left) + 'px';
-                dropdown.style.top = (rect.bottom - formGroupRect.top) + 'px';
-                dropdown.style.minWidth = rect.width + 'px';
-                
-                document.addEventListener('click', closeDeleteDatePicker);
-            } else {
-                document.removeEventListener('click', closeDeleteDatePicker);
-            }
-        }
-
-        function closeDeleteDatePicker(event) {
-            const wrapper = document.getElementById('deleteDateWrapper');
-            const dropdown = document.getElementById('deleteDateDropdown');
-            
-            wrapper.classList.remove('open');
-            dropdown.classList.remove('show');
-            document.removeEventListener('click', closeDeleteDatePicker);
-        }
-
-        // 批量删除多选下拉框
-        function toggleBatchDeleteDropdown(event) {
-            event.stopPropagation();
-            const container = document.getElementById('batchDeleteContainer');
-            const dropdown = document.getElementById('batchDeleteDropdown');
-            
-            container.classList.toggle('open');
-            dropdown.classList.toggle('show');
-            
-            if (dropdown.classList.contains('show')) {
-                const rect = container.getBoundingClientRect();
-                const formGroupRect = container.parentElement.getBoundingClientRect();
-                dropdown.style.position = 'absolute';
-                dropdown.style.left = (rect.left - formGroupRect.left) + 'px';
-                dropdown.style.top = (rect.bottom - formGroupRect.top) + 'px';
-                dropdown.style.minWidth = rect.width + 'px';
-                
-                document.addEventListener('click', closeBatchDeleteDropdown);
-            } else {
-                document.removeEventListener('click', closeBatchDeleteDropdown);
-            }
-        }
-
-        function closeBatchDeleteDropdown() {
-            const container = document.getElementById('batchDeleteContainer');
-            const dropdown = document.getElementById('batchDeleteDropdown');
-            
-            container.classList.remove('open');
-            dropdown.classList.remove('show');
-            document.removeEventListener('click', closeBatchDeleteDropdown);
-        }
-
-        function toggleSelectAllDates(event) {
-            event.stopPropagation();
-            const content = document.getElementById('batchDeleteContent');
-            const options = content.querySelectorAll('.dropdown-option');
-            const allSelected = selectedBatchDates.size === options.length;
-            
-            if (allSelected) {
-                selectedBatchDates.clear();
-            } else {
-                options.forEach(opt => {
-                    const value = opt.dataset.value;
-                    selectedBatchDates.add(value);
-                });
-            }
-            
-            updateBatchOptions();
-            updateBatchChipsDisplay();
-        }
-
-        function toggleDateOption(event) {
-            event.stopPropagation();
-            const option = event.currentTarget;
-            const value = option.dataset.value;
-            
-            if (selectedBatchDates.has(value)) {
-                selectedBatchDates.delete(value);
-            } else {
-                selectedBatchDates.add(value);
-            }
-            
-            updateBatchOptions();
-            updateBatchChipsDisplay();
-        }
-
-        function removeBatchDate(event, date) {
-            event.stopPropagation();
-            selectedBatchDates.delete(date);
-            updateBatchOptions();
-            updateBatchChipsDisplay();
-        }
-
-        function updateBatchOptions() {
-            const content = document.getElementById('batchDeleteContent');
-            const options = content.querySelectorAll('.dropdown-option');
-            
-            options.forEach(opt => {
-                const value = opt.dataset.value;
-                opt.classList.toggle('selected', selectedBatchDates.has(value));
-            });
-        }
-
-        function updateBatchChipsDisplay() {
-            const chipsContainer = document.getElementById('batchDeleteChips');
-            
-            if (selectedBatchDates.size === 0) {
-                chipsContainer.innerHTML = '<span class="multi-select-placeholder">点击选择日期...</span>';
-            } else {
-                const dates = Array.from(selectedBatchDates).sort();
-                const visibleDates = dates.slice(0, 5);
-                const remainingCount = dates.length - 5;
-                
-                let html = '';
-                visibleDates.forEach(date => {
-                    html += `<span class="multi-select-chip">${date}<span class="remove-btn" onclick="removeBatchDate(event, '${date}')">×</span></span>`;
-                });
-                if (remainingCount > 0) {
-                    html += `<span class="multi-select-chip">+${remainingCount}</span>`;
-                }
-                
-                chipsContainer.innerHTML = html;
-            }
-        }
-
-        // 绑定自定义下拉框选项点击事件
-        document.getElementById('deleteDateDropdown').addEventListener('click', function(event) {
-            event.stopPropagation();
-            const item = event.target.closest('.select-dropdown-item');
-            if (!item || item.classList.contains('disabled')) return;
-            
-            const value = item.dataset.value;
-            const display = document.getElementById('deleteDateDisplay');
-            const input = document.getElementById('deleteDate');
-            
-            input.value = value;
-            display.textContent = value;
-            
-            closeDeleteDatePicker();
-        });
-
         // 数据管理相关函数
         async function loadDatesForManage() {
             try {
                 const response = await fetch('/api/dates');
                 const dates = await response.json();
 
-                // 填充删除单日数据的自定义下拉框
-                const dropdown = document.getElementById('deleteDateDropdown');
-                const display = document.getElementById('deleteDateDisplay');
-                const input = document.getElementById('deleteDate');
-                
-                if (dates.length > 0) {
-                    dropdown.innerHTML = dates.map(d => `<div class="select-dropdown-item" data-value="${d}">${d}</div>`).join('');
-                    if (!input.value) {
-                        input.value = dates[0];
-                        display.textContent = dates[0];
-                    }
-                } else {
-                    dropdown.innerHTML = '<div class="select-dropdown-item disabled">无可用数据</div>';
-                    input.value = '';
-                    display.textContent = '无可用数据';
-                }
+                // 填充删除单日数据的下拉框
+                const select = document.getElementById('deleteDate');
+                select.innerHTML = dates.length > 0
+                    ? dates.map(d => `<option value="${d}">${d}</option>`).join('')
+                    : '<option value="">无可用数据</option>';
 
-                // 填充批量删除的多选下拉框
-                const batchContent = document.getElementById('batchDeleteContent');
-                if (dates.length > 0) {
-                    batchContent.innerHTML = dates.map(d => `
-                        <div class="dropdown-option" data-value="${d}" onclick="toggleDateOption(event)">
-                            <div class="checkbox"></div>
-                            <span>${d}</span>
-                        </div>
-                    `).join('');
-                } else {
-                    batchContent.innerHTML = '<div class="dropdown-option disabled">无可用数据</div>';
-                }
+                // 填充批量删除的复选框
+                const container = document.getElementById('batchDeleteDates');
+                container.innerHTML = dates.length > 0
+                    ? dates.map(d => `<label class="date-checkbox"><input type="checkbox" value="${d}"> ${d}</label>`).join('')
+                    : '<span class="loading">无可用数据</span>';
             } catch (error) {
                 console.error('加载日期失败:', error);
             }
@@ -2654,7 +1893,8 @@
         }
 
         async function batchDelete() {
-            const dates = Array.from(selectedBatchDates);
+            const checkboxes = document.querySelectorAll('#batchDeleteDates input:checked');
+            const dates = Array.from(checkboxes).map(cb => cb.value);
 
             if (dates.length === 0) {
                 document.getElementById('batchDeleteResult').innerHTML = '<p class="error">请选择至少一个日期</p>';
@@ -2684,8 +1924,6 @@
                             <li>删除玩家记录: ${result.total_player_records_deleted} 条</li>
                         </ul>
                     `;
-                    selectedBatchDates.clear();
-                    updateBatchChipsDisplay();
                     loadDatesForManage();
                     exportData();
                 } else {
