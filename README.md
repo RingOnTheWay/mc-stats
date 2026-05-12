@@ -154,10 +154,6 @@ stat/
 
 - 前端自动检测运行模式：访问 `localhost:5000` 为本地服务器模式，否则为静态页面模式
 - 本地模式自动从 API 加载数据，静态模式从 `data.json` 加载
-- 数据加载期间导航栏自动禁用点击，防止异步竞态问题
-- 服务器扫描的 Minecraft 统计文件位于 `stats/` 目录下，自动解析 `minecraft:custom`、`minecraft:killed`、`minecraft:crafted`、`minecraft:used`、`minecraft:picked_up`、`minecraft:dropped` 等统计类型
-- 物品中文映射（itemNameMap）内置于 `index.html`，覆盖 930+ 种 Minecraft 物品/实体的官方中文译名
-- `.gitignore` 中排除了 `mc_stats_server.py`、`mc_stats.db` 等本地开发文件
 
 ## 特别鸣谢
 

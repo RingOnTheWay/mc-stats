@@ -24,6 +24,12 @@ pyproject.toml
 uv.lock
 server_example/
 
+# Claude 相关文件
+.claude/
+.claude_history/
+CLAUDE.md
+claude-*
+
 # 其他
 *.db.bak
 *.log
