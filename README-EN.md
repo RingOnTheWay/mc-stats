@@ -10,6 +10,8 @@
 [![Chart.js](https://img.shields.io/badge/Chart.js-4.0+-orange?style=flat-square)](https://www.chartjs.org/)
 [![Demo](https://img.shields.io/badge/Demo-Online-blue?style=flat-square)](https://ringontheway.github.io/mc-stats/)
 
+<img src="assets/icon.png" alt="MC Stats" align="center" height="96" />
+
 **[简体中文](README.md) | English**
 
 ⭐ If you like this project, please give it a Star on GitHub — Thank you!
