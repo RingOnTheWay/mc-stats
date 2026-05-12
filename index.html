@@ -125,6 +125,18 @@
             color: var(--md-sys-color-on-secondary-container);
         }
 
+        .loading-nav .nav-item {
+            cursor: not-allowed;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .loading-nav .nav-item.active {
+            opacity: 0.8;
+            background: var(--md-sys-color-secondary-container);
+            color: var(--md-sys-color-on-secondary-container);
+        }
+
         .nav-item .material-icons {
             font-size: 24px;
         }
@@ -1133,7 +1145,7 @@
                 <span class="material-icons">analytics</span>
                 <h1>MC统计</h1>
             </div>
-            <nav class="sidebar-nav">
+            <nav class="sidebar-nav loading-nav">
                 <div class="nav-item active" onclick="switchTab('dashboard')">
                     <span class="material-icons">dashboard</span>
                     <span>仪表盘</span>
@@ -1524,6 +1536,7 @@
         let allPlayers = new Set();
         let selectedPlayers = new Set();
         let staticData = null;
+        let isLoading = true;
 
         // 检测是否为本地服务器模式
         const isLocalServer = window.location.hostname === 'localhost' && window.location.port === '5000';
@@ -1620,9 +1633,12 @@
 
             console.log('updatePlayerFilter: found players count =', allPlayers.size);
 
-            // 默认选中特定玩家
+            // 默认选中5个核心玩家
             const defaultPlayers = ['MuxiAcio', 'RingOfficial', 'Roxy', 'hwj', 'roxy'];
             selectedPlayers = new Set(defaultPlayers.filter(p => allPlayers.has(p)));
+            if (selectedPlayers.size === 0) {
+                selectedPlayers = new Set(allPlayers);
+            }
 
             // 构建下拉选项
             const dropdown = document.getElementById('playerDropdown');
@@ -1632,7 +1648,7 @@
             }
             const sortedPlayers = Array.from(allPlayers).sort();
 
-            let html = '<div class="player-dropdown-item" data-value="all">全部玩家<span class="material-icons check-icon">check</span></div>';
+            let html = '';
             sortedPlayers.forEach(player => {
                 const isSelected = selectedPlayers.has(player);
                 html += `<div class="player-dropdown-item${isSelected ? ' selected' : ''}" data-value="${player}">${player}<span class="material-icons check-icon">check</span></div>`;
@@ -1693,12 +1709,7 @@
         // 更新下拉框选中状态
         function updatePlayerDropdownSelection() {
             document.querySelectorAll('.player-dropdown-item').forEach(item => {
-                const value = item.dataset.value;
-                if (value === 'all') {
-                    item.classList.toggle('selected', selectedPlayers.size === allPlayers.size || selectedPlayers.size === 0);
-                } else {
-                    item.classList.toggle('selected', selectedPlayers.has(value));
-                }
+                item.classList.toggle('selected', selectedPlayers.has(item.dataset.value));
             });
         }
 
@@ -1725,19 +1736,10 @@
             if (!item) return;
 
             const value = item.dataset.value;
-            if (value === 'all') {
-                selectedPlayers = new Set(allPlayers);
+            if (selectedPlayers.has(value)) {
+                selectedPlayers.delete(value);
             } else {
-                if (selectedPlayers.size === allPlayers.size) {
-                    selectedPlayers = new Set([value]);
-                } else if (selectedPlayers.has(value)) {
-                    selectedPlayers.delete(value);
-                    if (selectedPlayers.size === 0) {
-                        selectedPlayers = new Set(allPlayers);
-                    }
-                } else {
-                    selectedPlayers.add(value);
-                }
+                selectedPlayers.add(value);
             }
 
             updatePlayerDropdownSelection();
@@ -1814,7 +1816,8 @@
         function loadPlayerStatsChart(statType, chartId, label, valueTransform = null) {
             const data = staticData.player_stats[statType] || {};
             const dates = Object.keys(data).sort();
-            const filteredPlayers = Array.from(selectedPlayers).sort();
+            const activePlayers = selectedPlayers.size === 0 ? allPlayers : selectedPlayers;
+            const filteredPlayers = Array.from(activePlayers).sort();
             const colors = generateColors(filteredPlayers.length + 1);
 
             const datasets = filteredPlayers.map((player, index) => ({
@@ -2914,6 +2917,8 @@
             }
 
             document.getElementById('loading').style.display = 'none';
+            isLoading = false;
+            document.querySelector('.sidebar-nav').classList.remove('loading-nav');
 
             if (loaded && staticData.map_sizes && Object.keys(staticData.map_sizes).length > 0) {
                 document.getElementById('dashboard').style.display = 'block';
@@ -2959,6 +2964,9 @@
 
         // Tab切换
         async function switchTab(tabName) {
+            if (isLoading) {
+                return;
+            }
             // 隐藏所有tab
             ['dashboard', 'tab-battle', 'tab-craft', 'tab-items', 'tab-activity', 'tab-scan', 'tab-manage'].forEach(id => {
                 const el = document.getElementById(id);
@@ -3074,18 +3082,13 @@
                     });
                 });
 
-                // 默认选中玩家
+                // 默认选中5个核心玩家
                 const defaultPlayers = ['MuxiAcio', 'RingOfficial', 'Roxy', 'hwj', 'roxy'];
                 selectedBattlePlayers = new Set(defaultPlayers.filter(p => battleAllPlayers.has(p)));
-
-                console.log('initBattleTab: battleAllPlayers count =', battleAllPlayers.size);
-                console.log('initBattleTab: selectedBattlePlayers initial =', Array.from(selectedBattlePlayers));
-
-                // 如果没有命中任何默认玩家，回退为全部玩家以便展示数据
                 if (selectedBattlePlayers.size === 0) {
                     selectedBattlePlayers = new Set(battleAllPlayers);
-                    console.warn('initBattleTab: 默认玩家未命中，回退为全部玩家');
                 }
+                console.log('initBattleTab: battleAllPlayers count =', battleAllPlayers.size);
 
                 // 初始化玩家筛选器（确保下拉元素存在）
                 const dropdownEl = document.getElementById('battlePlayerDropdown');
@@ -3118,7 +3121,7 @@
             const dropdown = document.getElementById('battlePlayerDropdown');
             const sortedPlayers = Array.from(battleAllPlayers).sort();
 
-            let html = '<div class="player-dropdown-item" data-value="all">全部玩家<span class="material-icons check-icon">check</span></div>';
+            let html = '';
             sortedPlayers.forEach(player => {
                 const isSelected = selectedBattlePlayers.has(player);
                 html += `<div class="player-dropdown-item${isSelected ? ' selected' : ''}" data-value="${player}">${player}<span class="material-icons check-icon">check</span></div>`;
@@ -3162,12 +3165,7 @@
         // 更新战斗下拉框选中状态
         function updateBattleDropdownSelection() {
             document.querySelectorAll('#battlePlayerDropdown .player-dropdown-item').forEach(item => {
-                const value = item.dataset.value;
-                if (value === 'all') {
-                    item.classList.toggle('selected', selectedBattlePlayers.size === battleAllPlayers.size || selectedBattlePlayers.size === 0);
-                } else {
-                    item.classList.toggle('selected', selectedBattlePlayers.has(value));
-                }
+                item.classList.toggle('selected', selectedBattlePlayers.has(item.dataset.value));
             });
         }
 
@@ -3192,7 +3190,8 @@
         function loadBattleChart() {
             const data = battleData[battleCategory] || {};
             const dates = Object.keys(data).sort();
-            const filteredPlayers = Array.from(selectedBattlePlayers).sort();
+            const activePlayers = selectedBattlePlayers.size === 0 ? battleAllPlayers : selectedBattlePlayers;
+            const filteredPlayers = Array.from(activePlayers).sort();
             const colors = generateColorPairs(filteredPlayers.length + 1);
 
             const datasets = filteredPlayers.map((player, index) => ({
@@ -3261,7 +3260,8 @@
         function loadTopMobsTable() {
             const data = battleData[battleCategory] || {};
             const dates = Object.keys(data).sort();
-            const filteredPlayers = Array.from(selectedBattlePlayers);
+            const activePlayers = selectedBattlePlayers.size === 0 ? battleAllPlayers : selectedBattlePlayers;
+            const filteredPlayers = Array.from(activePlayers);
 
             // 汇总所有玩家对每种怪物的统计
             const mobTotals = {};
@@ -3305,19 +3305,10 @@
                 if (!item) return;
 
                 const value = item.dataset.value;
-                if (value === 'all') {
-                    selectedBattlePlayers = new Set(battleAllPlayers);
+                if (selectedBattlePlayers.has(value)) {
+                    selectedBattlePlayers.delete(value);
                 } else {
-                    if (selectedBattlePlayers.size === battleAllPlayers.size) {
-                        selectedBattlePlayers = new Set([value]);
-                    } else if (selectedBattlePlayers.has(value)) {
-                        selectedBattlePlayers.delete(value);
-                        if (selectedBattlePlayers.size === 0) {
-                            selectedBattlePlayers = new Set(battleAllPlayers);
-                        }
-                    } else {
-                        selectedBattlePlayers.add(value);
-                    }
+                    selectedBattlePlayers.add(value);
                 }
 
                 updateBattleDropdownSelection();
@@ -3388,6 +3379,7 @@
 
             console.log('[craft] craftAllPlayers count:', craftAllPlayers.size, 'players:', Array.from(craftAllPlayers));
 
+            // 默认选中5个核心玩家
             const defaultPlayers = ['MuxiAcio', 'RingOfficial', 'Roxy', 'hwj', 'roxy'];
             selectedCraftPlayers = new Set(defaultPlayers.filter(p => craftAllPlayers.has(p)));
             if (selectedCraftPlayers.size === 0) {
@@ -3407,7 +3399,7 @@
         function initCraftPlayerFilter() {
             const dropdown = document.getElementById('craftPlayerDropdown');
             const sortedPlayers = Array.from(craftAllPlayers).sort();
-            let html = '<div class="player-dropdown-item" data-value="all">全部玩家<span class="material-icons check-icon">check</span></div>';
+            let html = '';
             sortedPlayers.forEach(player => {
                 const isSelected = selectedCraftPlayers.has(player);
                 html += `<div class="player-dropdown-item${isSelected ? ' selected' : ''}" data-value="${player}">${player}<span class="material-icons check-icon">check</span></div>`;
@@ -3454,12 +3446,7 @@
 
         function updateCraftDropdownSelection() {
             document.querySelectorAll('#craftPlayerDropdown .player-dropdown-item').forEach(item => {
-                const value = item.dataset.value;
-                if (value === 'all') {
-                    item.classList.toggle('selected', selectedCraftPlayers.size === craftAllPlayers.size || selectedCraftPlayers.size === 0);
-                } else {
-                    item.classList.toggle('selected', selectedCraftPlayers.has(value));
-                }
+                item.classList.toggle('selected', selectedCraftPlayers.has(item.dataset.value));
             });
         }
 
@@ -3476,7 +3463,8 @@
         function loadCraftChart() {
             const data = craftData[craftCategory] || {};
             const dates = Object.keys(data).sort();
-            const filteredPlayers = Array.from(selectedCraftPlayers).sort();
+            const activePlayers = selectedCraftPlayers.size === 0 ? craftAllPlayers : selectedCraftPlayers;
+            const filteredPlayers = Array.from(activePlayers).sort();
             const colors = generateColorPairs(filteredPlayers.length + 1);
 
             const datasets = filteredPlayers.map((player, index) => ({
@@ -3540,7 +3528,8 @@
         function loadTopCraftItemsTable() {
             const data = craftData[craftCategory] || {};
             const dates = Object.keys(data).sort();
-            const filteredPlayers = Array.from(selectedCraftPlayers);
+            const activePlayers = selectedCraftPlayers.size === 0 ? craftAllPlayers : selectedCraftPlayers;
+            const filteredPlayers = Array.from(activePlayers);
 
             const itemTotals = {};
             filteredPlayers.forEach(player => {
@@ -3580,19 +3569,10 @@
                 if (!item) return;
 
                 const value = item.dataset.value;
-                if (value === 'all') {
-                    selectedCraftPlayers = new Set(craftAllPlayers);
+                if (selectedCraftPlayers.has(value)) {
+                    selectedCraftPlayers.delete(value);
                 } else {
-                    if (selectedCraftPlayers.size === craftAllPlayers.size) {
-                        selectedCraftPlayers = new Set([value]);
-                    } else if (selectedCraftPlayers.has(value)) {
-                        selectedCraftPlayers.delete(value);
-                        if (selectedCraftPlayers.size === 0) {
-                            selectedCraftPlayers = new Set(craftAllPlayers);
-                        }
-                    } else {
-                        selectedCraftPlayers.add(value);
-                    }
+                    selectedCraftPlayers.add(value);
                 }
 
                 updateCraftDropdownSelection();
@@ -3661,6 +3641,7 @@
                 });
             });
 
+            // 默认选中5个核心玩家
             const defaultPlayers = ['MuxiAcio', 'RingOfficial', 'Roxy', 'hwj', 'roxy'];
             selectedItemsPlayers = new Set(defaultPlayers.filter(p => itemsAllPlayers.has(p)));
             if (selectedItemsPlayers.size === 0) {
@@ -3680,7 +3661,7 @@
         function initItemsPlayerFilter() {
             const dropdown = document.getElementById('itemsPlayerDropdown');
             const sortedPlayers = Array.from(itemsAllPlayers).sort();
-            let html = '<div class="player-dropdown-item" data-value="all">全部玩家<span class="material-icons check-icon">check</span></div>';
+            let html = '';
             sortedPlayers.forEach(player => {
                 const isSelected = selectedItemsPlayers.has(player);
                 html += `<div class="player-dropdown-item${isSelected ? ' selected' : ''}" data-value="${player}">${player}<span class="material-icons check-icon">check</span></div>`;
@@ -3727,12 +3708,7 @@
 
         function updateItemsDropdownSelection() {
             document.querySelectorAll('#itemsPlayerDropdown .player-dropdown-item').forEach(item => {
-                const value = item.dataset.value;
-                if (value === 'all') {
-                    item.classList.toggle('selected', selectedItemsPlayers.size === itemsAllPlayers.size || selectedItemsPlayers.size === 0);
-                } else {
-                    item.classList.toggle('selected', selectedItemsPlayers.has(value));
-                }
+                item.classList.toggle('selected', selectedItemsPlayers.has(item.dataset.value));
             });
         }
 
@@ -3750,7 +3726,8 @@
         function loadItemsChart() {
             const data = itemsData[itemsCategory] || {};
             const dates = Object.keys(data).sort();
-            const filteredPlayers = Array.from(selectedItemsPlayers).sort();
+            const activePlayers = selectedItemsPlayers.size === 0 ? itemsAllPlayers : selectedItemsPlayers;
+            const filteredPlayers = Array.from(activePlayers).sort();
             const colors = generateColorPairs(filteredPlayers.length + 1);
 
             const datasets = filteredPlayers.map((player, index) => ({
@@ -3814,7 +3791,8 @@
         function loadTopItemsTable() {
             const data = itemsData[itemsCategory] || {};
             const dates = Object.keys(data).sort();
-            const filteredPlayers = Array.from(selectedItemsPlayers);
+            const activePlayers = selectedItemsPlayers.size === 0 ? itemsAllPlayers : selectedItemsPlayers;
+            const filteredPlayers = Array.from(activePlayers);
 
             const itemTotals = {};
             filteredPlayers.forEach(player => {
@@ -3853,19 +3831,10 @@
                 if (!item) return;
 
                 const value = item.dataset.value;
-                if (value === 'all') {
-                    selectedItemsPlayers = new Set(itemsAllPlayers);
+                if (selectedItemsPlayers.has(value)) {
+                    selectedItemsPlayers.delete(value);
                 } else {
-                    if (selectedItemsPlayers.size === itemsAllPlayers.size) {
-                        selectedItemsPlayers = new Set([value]);
-                    } else if (selectedItemsPlayers.has(value)) {
-                        selectedItemsPlayers.delete(value);
-                        if (selectedItemsPlayers.size === 0) {
-                            selectedItemsPlayers = new Set(itemsAllPlayers);
-                        }
-                    } else {
-                        selectedItemsPlayers.add(value);
-                    }
+                    selectedItemsPlayers.add(value);
                 }
 
                 updateItemsDropdownSelection();
@@ -3941,6 +3910,7 @@
                 });
             });
 
+            // 默认选中5个核心玩家
             const defaultPlayers = ['MuxiAcio', 'RingOfficial', 'Roxy', 'hwj', 'roxy'];
             selectedActivityPlayers = new Set(defaultPlayers.filter(p => activityAllPlayers.has(p)));
             if (selectedActivityPlayers.size === 0) {
@@ -3963,7 +3933,7 @@
         function initActivityPlayerFilter() {
             const dropdown = document.getElementById('activityPlayerDropdown');
             const sortedPlayers = Array.from(activityAllPlayers).sort();
-            let html = '<div class="player-dropdown-item" data-value="all">全部玩家<span class="material-icons check-icon">check</span></div>';
+            let html = '';
             sortedPlayers.forEach(player => {
                 const isSelected = selectedActivityPlayers.has(player);
                 html += `<div class="player-dropdown-item${isSelected ? ' selected' : ''}" data-value="${player}">${player}<span class="material-icons check-icon">check</span></div>`;
@@ -3995,6 +3965,12 @@
             event.stopPropagation();
             const container = document.getElementById('activityFilterContainer');
             const dropdown = document.getElementById('activityPlayerDropdown');
+            
+            const statContainer = document.getElementById('activityStatContainer');
+            const statDropdown = document.getElementById('activityStatDropdown');
+            statContainer.classList.remove('open');
+            statDropdown.classList.remove('show');
+            
             container.classList.toggle('open');
             dropdown.classList.toggle('show');
         }
@@ -4010,12 +3986,7 @@
 
         function updateActivityDropdownSelection() {
             document.querySelectorAll('#activityPlayerDropdown .player-dropdown-item').forEach(item => {
-                const value = item.dataset.value;
-                if (value === 'all') {
-                    item.classList.toggle('selected', selectedActivityPlayers.size === activityAllPlayers.size || selectedActivityPlayers.size === 0);
-                } else {
-                    item.classList.toggle('selected', selectedActivityPlayers.has(value));
-                }
+                item.classList.toggle('selected', selectedActivityPlayers.has(item.dataset.value));
             });
         }
 
@@ -4047,13 +4018,20 @@
             event.stopPropagation();
             const container = document.getElementById('activityStatContainer');
             const dropdown = document.getElementById('activityStatDropdown');
+            
+            const playerContainer = document.getElementById('activityFilterContainer');
+            const playerDropdown = document.getElementById('activityPlayerDropdown');
+            playerContainer.classList.remove('open');
+            playerDropdown.classList.remove('show');
+            
             container.classList.toggle('open');
             dropdown.classList.toggle('show');
         }
 
         function loadActivityChart() {
             const playerStats = (staticData && staticData.player_stats) || {};
-            const filteredPlayers = Array.from(selectedActivityPlayers).sort();
+            const activePlayers = selectedActivityPlayers.size === 0 ? activityAllPlayers : selectedActivityPlayers;
+            const filteredPlayers = Array.from(activePlayers).sort();
             const colors = generateColorPairs(filteredPlayers.length + 1);
 
             const statFilter = selectedActivityStat === 'all' ? ACTIVITY_STATS : [ACTIVITY_STATS.find(s => s.key === selectedActivityStat)].filter(Boolean);
@@ -4146,7 +4124,8 @@
 
         function loadTopActivityTable() {
             const playerStats = (staticData && staticData.player_stats) || {};
-            const filteredPlayers = Array.from(selectedActivityPlayers);
+            const activePlayers = selectedActivityPlayers.size === 0 ? activityAllPlayers : selectedActivityPlayers;
+            const filteredPlayers = Array.from(activePlayers);
 
             const statFilter = selectedActivityStat === 'all' ? ACTIVITY_STATS : [ACTIVITY_STATS.find(s => s.key === selectedActivityStat)].filter(Boolean);
             const isSpecificStat = selectedActivityStat !== 'all';
@@ -4197,19 +4176,10 @@
                 if (!item) return;
 
                 const value = item.dataset.value;
-                if (value === 'all') {
-                    selectedActivityPlayers = new Set(activityAllPlayers);
+                if (selectedActivityPlayers.has(value)) {
+                    selectedActivityPlayers.delete(value);
                 } else {
-                    if (selectedActivityPlayers.size === activityAllPlayers.size) {
-                        selectedActivityPlayers = new Set([value]);
-                    } else if (selectedActivityPlayers.has(value)) {
-                        selectedActivityPlayers.delete(value);
-                        if (selectedActivityPlayers.size === 0) {
-                            selectedActivityPlayers = new Set(activityAllPlayers);
-                        }
-                    } else {
-                        selectedActivityPlayers.add(value);
-                    }
+                    selectedActivityPlayers.add(value);
                 }
 
                 updateActivityDropdownSelection();
