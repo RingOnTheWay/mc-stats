@@ -294,6 +294,16 @@
             font-size: 18px;
         }
 
+        .stat-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-label .material-icons {
+            font-size: 18px;
+        }
+
         .surface-card {
             background: var(--md-sys-color-surface-container-low);
             border-radius: 28px;
@@ -1140,6 +1150,10 @@
                     <span class="material-icons">inventory_2</span>
                     <span>物品统计</span>
                 </div>
+                <div class="nav-item" onclick="switchTab('activity')">
+                    <span class="material-icons">directions_run</span>
+                    <span>活动统计</span>
+                </div>
                 <div class="nav-item" onclick="switchTab('scan')">
                     <span class="material-icons">scanner</span>
                     <span>数据扫描</span>
@@ -1363,6 +1377,50 @@
                     </div>
                 </div>
 
+                <!-- 活动统计Tab -->
+                <div id="tab-activity" class="tab-content" style="display: none;">
+                    <div class="surface-card">
+                        <div class="form-group">
+                            <label>筛选玩家：</label>
+                            <div class="player-filter-container" id="activityFilterContainer">
+                                <div class="player-filter-display" id="activityFilterDisplay">
+                                    <span class="player-filter-placeholder">全部玩家</span>
+                                </div>
+                                <span class="material-icons dropdown-arrow">expand_more</span>
+                                <div class="player-dropdown" id="activityPlayerDropdown"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>活动类型：</label>
+                            <div class="player-filter-container" id="activityStatContainer">
+                                <div class="player-filter-display" id="activityStatDisplay">
+                                    <span class="player-filter-placeholder">全部活动</span>
+                                </div>
+                                <span class="material-icons dropdown-arrow">expand_more</span>
+                                <div class="player-dropdown" id="activityStatDropdown"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="charts-container">
+                        <div class="chart-wrapper">
+                            <h2>
+                                <span class="material-icons">timeline</span>
+                                <span>活动统计趋势</span>
+                            </h2>
+                            <canvas id="activityChart"></canvas>
+                        </div>
+
+                        <div class="chart-wrapper">
+                            <h2>
+                                <span class="material-icons">emoji_events</span>
+                                Top 10 活跃玩家
+                            </h2>
+                            <div id="topActivityTable" class="data-table"></div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- 数据扫描Tab -->
                 <div id="tab-scan" class="tab-content" style="display: none;">
                     <div class="surface-card">
@@ -1474,8 +1532,9 @@
         async function loadFromAPI() {
             try {
                 const mapSizesPromise = fetch('/api/map_sizes').then(r => r.json());
-                // 我们需要多个玩家统计类型，按UI使用的类型拉取
-                const statTypes = ['play_time', 'deaths', 'mob_kills'];
+                const statTypes = ['play_time', 'deaths', 'mob_kills', 'player_kills', 'jumps', 'distance_walked',
+                    'sprint_one_cm', 'walk_one_cm', 'fly_one_cm', 'climb_one_cm', 'swim_one_cm',
+                    'horse_one_cm', 'boat_one_cm', 'aviate_one_cm', 'fall_one_cm'];
                 const playerStatsPromises = statTypes.map(t => fetch(`/api/player_stats?type=${encodeURIComponent(t)}`).then(r => r.json()).then(data => ({ t, data })));
                 // 拉取战斗两类数据（killed 和 killed_by）
                 const battleKilledPromise = fetch('/api/battle_stats?category=killed').then(r => r.json());
@@ -1653,6 +1712,10 @@
             document.getElementById('craftPlayerDropdown').classList.remove('show');
             document.getElementById('itemsFilterContainer').classList.remove('open');
             document.getElementById('itemsPlayerDropdown').classList.remove('show');
+            document.getElementById('activityFilterContainer').classList.remove('open');
+            document.getElementById('activityPlayerDropdown').classList.remove('show');
+            document.getElementById('activityStatContainer').classList.remove('open');
+            document.getElementById('activityStatDropdown').classList.remove('show');
         });
 
         // 绑定下拉框点击事件
@@ -2873,6 +2936,11 @@
                     } catch (e) {
                         console.warn('静态模式初始化物品统计Tab失败:', e);
                     }
+                    try {
+                        initActivityTab();
+                    } catch (e) {
+                        console.warn('静态模式初始化活动统计Tab失败:', e);
+                    }
                 }
             } else {
                 document.getElementById('noData').style.display = 'block';
@@ -2892,7 +2960,7 @@
         // Tab切换
         async function switchTab(tabName) {
             // 隐藏所有tab
-            ['dashboard', 'tab-battle', 'tab-craft', 'tab-items', 'tab-scan', 'tab-manage'].forEach(id => {
+            ['dashboard', 'tab-battle', 'tab-craft', 'tab-items', 'tab-activity', 'tab-scan', 'tab-manage'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.style.display = 'none';
             });
@@ -2926,6 +2994,11 @@
                 if (el) el.style.display = 'block';
                 if (bc) bc.textContent = '物品统计';
                 await initItemsTab();
+            } else if (tabName === 'activity') {
+                const el = document.getElementById('tab-activity');
+                if (el) el.style.display = 'block';
+                if (bc) bc.textContent = '活动统计';
+                await initActivityTab();
             } else if (tabName === 'scan') {
                 const el = document.getElementById('tab-scan');
                 if (el) {
@@ -3799,6 +3872,369 @@
                 updateItemsFilterDisplay();
                 loadItemsChart();
                 loadTopItemsTable();
+            });
+        }
+
+        // ================== 活动统计 ==================
+        let activityDataContainer = null;
+        let selectedActivityPlayers = new Set();
+        let activityAllPlayers = new Set();
+
+        const ACTIVITY_STATS = [
+            { key: 'sprint_one_cm', label: '跑步距离', unit: 'cm', icon: 'directions_run' },
+            { key: 'walk_one_cm', label: '走路距离', unit: 'cm', icon: 'directions_walk' },
+            { key: 'fly_one_cm', label: '飞行距离', unit: 'cm', icon: 'flight' },
+            { key: 'climb_one_cm', label: '攀爬距离', unit: 'cm', icon: 'landscape' },
+            { key: 'swim_one_cm', label: '游泳距离', unit: 'cm', icon: 'pool' },
+            { key: 'horse_one_cm', label: '骑马距离', unit: 'cm', icon: 'bedroom_baby' },
+            { key: 'boat_one_cm', label: '乘船距离', unit: 'cm', icon: 'sailing' },
+            { key: 'aviate_one_cm', label: '鞘翅飞行', unit: 'cm', icon: 'air' },
+            { key: 'jumps', label: '跳跃次数', unit: '', icon: 'arrow_upward' },
+            { key: 'fall_one_cm', label: '跌落距离', unit: 'cm', icon: 'arrow_downward' },
+            { key: 'player_kills', label: '击杀玩家', unit: '', icon: 'person_remove' },
+        ];
+
+        let selectedActivityStat = 'all';
+
+        async function initActivityTab() {
+            try {
+                if (!staticData) {
+                    if (isLocalServer) {
+                        const ok = await loadFromAPI();
+                        if (!ok) throw new Error('无法从 API 加载活动统计数据');
+                    } else {
+                        const ok = await loadStaticData();
+                        if (!ok) throw new Error('无法加载静态活动统计数据');
+                    }
+                }
+                initActivityTabCore();
+            } catch (error) {
+                console.error('加载活动统计数据失败:', error);
+            }
+        }
+
+        function initActivityTabCore() {
+            const data = staticData || {};
+            const chartsContainer = document.querySelector('#tab-activity .charts-container');
+            if (!chartsContainer) {
+                console.error('找不到活动统计容器 (#tab-activity .charts-container)');
+                return;
+            }
+
+            if (!data.player_stats || Object.keys(data.player_stats).length === 0) {
+                chartsContainer.innerHTML = `
+                    <div class="surface-card">
+                        <div class="loading">
+                            <span class="material-icons">info</span>
+                            <p>暂无活动统计数据，请先导入最新数据</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            activityAllPlayers.clear();
+            const playerStats = data.player_stats || {};
+            Object.values(playerStats).forEach(statData => {
+                Object.values(statData).forEach(dateData => {
+                    Object.keys(dateData || {}).forEach(player => activityAllPlayers.add(player));
+                });
+            });
+
+            const defaultPlayers = ['MuxiAcio', 'RingOfficial', 'Roxy', 'hwj', 'roxy'];
+            selectedActivityPlayers = new Set(defaultPlayers.filter(p => activityAllPlayers.has(p)));
+            if (selectedActivityPlayers.size === 0) {
+                selectedActivityPlayers = new Set(activityAllPlayers);
+            }
+
+            initActivityPlayerFilter();
+            initActivityStatDropdown();
+            const containerEl = document.getElementById('activityFilterContainer');
+            containerEl?.addEventListener('click', toggleActivityDropdown);
+            const statContainer = document.getElementById('activityStatContainer');
+            statContainer?.addEventListener('click', toggleActivityStatDropdown);
+
+            const canvas = document.getElementById('activityChart');
+            if (canvas) loadActivityChart();
+            const topTable = document.getElementById('topActivityTable');
+            if (topTable) loadTopActivityTable();
+        }
+
+        function initActivityPlayerFilter() {
+            const dropdown = document.getElementById('activityPlayerDropdown');
+            const sortedPlayers = Array.from(activityAllPlayers).sort();
+            let html = '<div class="player-dropdown-item" data-value="all">全部玩家<span class="material-icons check-icon">check</span></div>';
+            sortedPlayers.forEach(player => {
+                const isSelected = selectedActivityPlayers.has(player);
+                html += `<div class="player-dropdown-item${isSelected ? ' selected' : ''}" data-value="${player}">${player}<span class="material-icons check-icon">check</span></div>`;
+            });
+            dropdown.innerHTML = html;
+            updateActivityFilterDisplay();
+        }
+
+        function updateActivityFilterDisplay() {
+            const display = document.getElementById('activityFilterDisplay');
+            if (selectedActivityPlayers.size === 0 || selectedActivityPlayers.size === activityAllPlayers.size) {
+                display.innerHTML = '<span class="player-filter-placeholder">全部玩家</span>';
+            } else {
+                const players = Array.from(selectedActivityPlayers).sort();
+                const visiblePlayers = players.slice(0, 5);
+                const remainingCount = players.length - 5;
+                let html = '';
+                visiblePlayers.forEach(player => {
+                    html += `<span class="player-badge">${player}<span class="remove-btn" onclick="removeActivityPlayer(event, '${player}')">×</span></span>`;
+                });
+                if (remainingCount > 0) {
+                    html += `<span class="player-filter-placeholder">+${remainingCount}...</span>`;
+                }
+                display.innerHTML = html;
+            }
+        }
+
+        function toggleActivityDropdown(event) {
+            event.stopPropagation();
+            const container = document.getElementById('activityFilterContainer');
+            const dropdown = document.getElementById('activityPlayerDropdown');
+            container.classList.toggle('open');
+            dropdown.classList.toggle('show');
+        }
+
+        function removeActivityPlayer(event, player) {
+            event.stopPropagation();
+            selectedActivityPlayers.delete(player);
+            updateActivityDropdownSelection();
+            updateActivityFilterDisplay();
+            loadActivityChart();
+            loadTopActivityTable();
+        }
+
+        function updateActivityDropdownSelection() {
+            document.querySelectorAll('#activityPlayerDropdown .player-dropdown-item').forEach(item => {
+                const value = item.dataset.value;
+                if (value === 'all') {
+                    item.classList.toggle('selected', selectedActivityPlayers.size === activityAllPlayers.size || selectedActivityPlayers.size === 0);
+                } else {
+                    item.classList.toggle('selected', selectedActivityPlayers.has(value));
+                }
+            });
+        }
+
+        function initActivityStatDropdown() {
+            const dropdown = document.getElementById('activityStatDropdown');
+            let html = '<div class="player-dropdown-item selected" data-value="all"><span class="stat-label">全部活动</span><span class="material-icons check-icon">check</span></div>';
+            ACTIVITY_STATS.forEach(stat => {
+                const isSelected = selectedActivityStat === stat.key;
+                html += `<div class="player-dropdown-item${isSelected ? ' selected' : ''}" data-value="${stat.key}">
+                    <span class="stat-label"><span class="material-icons">${stat.icon}</span>${stat.label}</span><span class="material-icons check-icon">check</span></div>`;
+            });
+            dropdown.innerHTML = html;
+            updateActivityStatDisplay();
+        }
+
+        function updateActivityStatDisplay() {
+            const display = document.getElementById('activityStatDisplay');
+            if (selectedActivityStat === 'all') {
+                display.innerHTML = '<span class="player-filter-placeholder">全部活动</span>';
+            } else {
+                const stat = ACTIVITY_STATS.find(s => s.key === selectedActivityStat);
+                if (stat) {
+                    display.innerHTML = `<span class="player-badge"><span class="material-icons">${stat.icon}</span>${stat.label}</span>`;
+                }
+            }
+        }
+
+        function toggleActivityStatDropdown(event) {
+            event.stopPropagation();
+            const container = document.getElementById('activityStatContainer');
+            const dropdown = document.getElementById('activityStatDropdown');
+            container.classList.toggle('open');
+            dropdown.classList.toggle('show');
+        }
+
+        function loadActivityChart() {
+            const playerStats = (staticData && staticData.player_stats) || {};
+            const filteredPlayers = Array.from(selectedActivityPlayers).sort();
+            const colors = generateColorPairs(filteredPlayers.length + 1);
+
+            const statFilter = selectedActivityStat === 'all' ? ACTIVITY_STATS : [ACTIVITY_STATS.find(s => s.key === selectedActivityStat)].filter(Boolean);
+            const isSpecificStat = selectedActivityStat !== 'all';
+            const currentStat = statFilter[0];
+
+            const allDates = new Set();
+            statFilter.forEach(stat => {
+                const data = playerStats[stat.key] || {};
+                Object.keys(data).forEach(d => allDates.add(d));
+            });
+            const dates = Array.from(allDates).sort();
+
+            const datasets = filteredPlayers.map((player, index) => ({
+                label: player,
+                data: dates.map(date => {
+                    let total = 0;
+                    statFilter.forEach(stat => {
+                        const data = playerStats[stat.key] || {};
+                        const val = data[date]?.[player] || 0;
+                        if (stat.unit === 'cm') {
+                            total += val / 100;
+                        } else {
+                            total += val;
+                        }
+                    });
+                    return total;
+                }),
+                borderColor: colors[index] ? colors[index].border : '#888',
+                backgroundColor: colors[index] ? colors[index].bg : 'rgba(0,0,0,0.08)',
+                tension: 0.4
+            }));
+
+            const totalData = dates.map(date => {
+                return filteredPlayers.reduce((sum, player) => {
+                    let total = 0;
+                    statFilter.forEach(stat => {
+                        const data = playerStats[stat.key] || {};
+                        const val = data[date]?.[player] || 0;
+                        if (stat.unit === 'cm') {
+                            total += val / 100;
+                        } else {
+                            total += val;
+                        }
+                    });
+                    return sum + total;
+                }, 0);
+            });
+            datasets.push({
+                label: '总计',
+                data: totalData,
+                borderColor: '#7C4DFF',
+                backgroundColor: 'rgba(124, 77, 255, 0.1)',
+                borderWidth: 3,
+                tension: 0.4,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                hidden: true
+            });
+
+            if (charts.activity) charts.activity.destroy();
+            const ctx = document.getElementById('activityChart').getContext('2d');
+            const yTitle = isSpecificStat ? (currentStat.label + (currentStat.unit === 'cm' ? ' (米)' : ' (次)')) : '活动总计 (距离单位为米)';
+            charts.activity = new Chart(ctx, {
+                type: 'bar',
+                data: { labels: dates, datasets: datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                padding: 20,
+                                font: { size: 12 }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: yTitle }
+                        }
+                    }
+                }
+            });
+        }
+
+        function loadTopActivityTable() {
+            const playerStats = (staticData && staticData.player_stats) || {};
+            const filteredPlayers = Array.from(selectedActivityPlayers);
+
+            const statFilter = selectedActivityStat === 'all' ? ACTIVITY_STATS : [ACTIVITY_STATS.find(s => s.key === selectedActivityStat)].filter(Boolean);
+            const isSpecificStat = selectedActivityStat !== 'all';
+            const currentStat = statFilter[0];
+
+            const playerTotals = {};
+            filteredPlayers.forEach(player => {
+                let total = 0;
+                statFilter.forEach(stat => {
+                    const data = playerStats[stat.key] || {};
+                    Object.values(data).forEach(dateData => {
+                        const val = dateData[player] || 0;
+                        if (stat.unit === 'cm') {
+                            total += val / 100;
+                        } else {
+                            total += val;
+                        }
+                    });
+                });
+                if (total > 0) playerTotals[player] = total;
+            });
+
+            const topPlayers = Object.entries(playerTotals)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10);
+
+            const headerLabel = isSpecificStat ? (currentStat.label + (currentStat.unit === 'cm' ? ' (米)' : ' (次)')) : '活动总计';
+            let html = `<table><thead><tr><th>排名</th><th>玩家</th><th>${headerLabel}</th></tr></thead><tbody>`;
+            topPlayers.forEach(([player, total], index) => {
+                const rankClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : 'default';
+                html += `<tr>
+                    <td><span class="rank-badge ${rankClass}">${index + 1}</span></td>
+                    <td>${player}</td>
+                    <td>${Math.round(total)}</td>
+                </tr>`;
+            });
+            html += '</tbody></table>';
+
+            const el = document.getElementById('topActivityTable');
+            if (el) el.innerHTML = html;
+        }
+
+        const activityDropdown = document.getElementById('activityPlayerDropdown');
+        if (activityDropdown) {
+            activityDropdown.addEventListener('click', function(event) {
+                event.stopPropagation();
+                const item = event.target.closest('.player-dropdown-item');
+                if (!item) return;
+
+                const value = item.dataset.value;
+                if (value === 'all') {
+                    selectedActivityPlayers = new Set(activityAllPlayers);
+                } else {
+                    if (selectedActivityPlayers.size === activityAllPlayers.size) {
+                        selectedActivityPlayers = new Set([value]);
+                    } else if (selectedActivityPlayers.has(value)) {
+                        selectedActivityPlayers.delete(value);
+                        if (selectedActivityPlayers.size === 0) {
+                            selectedActivityPlayers = new Set(activityAllPlayers);
+                        }
+                    } else {
+                        selectedActivityPlayers.add(value);
+                    }
+                }
+
+                updateActivityDropdownSelection();
+                updateActivityFilterDisplay();
+                loadActivityChart();
+                loadTopActivityTable();
+            });
+        }
+
+        const activityStatDropdown = document.getElementById('activityStatDropdown');
+        if (activityStatDropdown) {
+            activityStatDropdown.addEventListener('click', function(event) {
+                event.stopPropagation();
+                const item = event.target.closest('.player-dropdown-item');
+                if (!item) return;
+
+                const value = item.dataset.value;
+                selectedActivityStat = value;
+
+                document.querySelectorAll('#activityStatDropdown .player-dropdown-item').forEach(el => {
+                    el.classList.toggle('selected', el.dataset.value === value);
+                });
+                updateActivityStatDisplay();
+                loadActivityChart();
+                loadTopActivityTable();
             });
         }
 
