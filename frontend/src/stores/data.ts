@@ -105,7 +105,12 @@ export const useDataStore = defineStore('data', () => {
       if (appStore.isStatic) {
         await loadStaticData()
       } else {
-        await loadFromAPI()
+        try {
+          await loadFromAPI()
+        } catch {
+          appStore.setMode('static')
+          await loadStaticData()
+        }
       }
       extractMetadata()
       loaded.value = true
