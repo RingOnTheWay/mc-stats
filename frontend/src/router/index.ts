@@ -37,6 +37,11 @@ const routes: RouteRecordRaw[] = [
     name: 'Activity',
     component: () => import('@/pages/ActivityPage.vue'),
   },
+  {
+    path: '/data-manage',
+    name: 'DataManage',
+    component: () => import('@/pages/DataImportPage.vue'),
+  },
 ]
 
 const router = createRouter({

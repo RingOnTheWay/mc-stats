@@ -283,7 +283,7 @@ services/api.ts   ← Unified API calls (auto-switch local/static mode)
 - The `detail_stats` table unifies battle/craft/item statistics via the `stat_domain` field; adding a new stat type only requires writing data with a new domain
 - The backend `services/parser.py` provides a generic `parse_detail_stats_by_domain()` function that accepts a domain and categories dict to parse any stat type
 - `services/scanner.py` batch scanning auto-detects dates from folder names (supports `YYYY-MM-DD`, `YYYY.MM.DD`, `MM.DD` formats)
-- `scripts/migrate_db.py` merges legacy tables (battle\_stats / craft\_stats / item\_stats) into detail\_stats, then drops old tables
+- 
 
 ## Acknowledgments
 

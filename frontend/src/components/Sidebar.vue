@@ -15,6 +15,7 @@ const navItems = computed(() => [
   { path: '/craft', icon: 'build', label: t('nav.craftStats') },
   { path: '/items', icon: 'inventory_2', label: t('nav.itemStats') },
   { path: '/activity', icon: 'timeline', label: t('nav.activity') },
+  { path: '/data-manage', icon: 'database', label: t('nav.dataManage') },
 ])
 
 const currentPath = computed(() => route.path)

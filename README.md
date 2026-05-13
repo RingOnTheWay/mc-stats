@@ -283,7 +283,7 @@ services/api.ts   ← 统一 API 调用（自动切换本地/静态模式）
 - `detail_stats` 表通过 `stat_domain` 字段统一管理 battle / craft / item 三类统计，新增统计类型只需写入新 domain 即可
 - 后端 `services/parser.py` 提供通用 `parse_detail_stats_by_domain()` 函数，接收 domain 和 categories 字典即可解析任意统计类型
 - `services/scanner.py` 批量扫描时自动从文件夹名解析日期（支持 `YYYY-MM-DD`、`YYYY.MM.DD`、`MM.DD` 等格式）
-- `scripts/migrate_db.py` 将旧版三表（battle\_stats / craft\_stats / item\_stats）合并为 detail\_stats，执行后删除旧表
+- 
 
 ## 特别鸣谢
 

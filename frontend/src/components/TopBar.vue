@@ -14,6 +14,7 @@ const breadcrumbMap: Record<string, string> = {
   '/craft': 'nav.craftStats',
   '/items': 'nav.itemStats',
   '/activity': 'nav.activity',
+  '/data-manage': 'nav.dataManage',
 }
 
 const currentLabel = computed(() => t(breadcrumbMap[route.path] || 'nav.dashboard'))

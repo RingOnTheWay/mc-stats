@@ -10,7 +10,8 @@
     "battleStats": "战斗统计",
     "craftStats": "合成统计",
     "itemStats": "物品统计",
-    "activity": "活动统计"
+    "activity": "活动统计",
+    "dataManage": "数据管理"
   },
   "common": {
     "loading": "加载中...",
@@ -83,5 +84,44 @@
   "lang": {
     "switchTo": "English",
     "current": "中文"
+  },
+  "dataManage": {
+    "importTab": "数据导入",
+    "exportTab": "数据导出",
+    "manageTab": "数据管理",
+    "singleScan": "单次扫描导入",
+    "serverFolder": "服务器文件夹路径",
+    "folderPlaceholder": "例如: /path/to/server",
+    "scanDate": "扫描日期",
+    "startScan": "开始扫描",
+    "scanSuccess": "扫描导入成功",
+    "date": "日期",
+    "playerCount": "玩家数量",
+    "battleCount": "战斗记录",
+    "craftCount": "合成记录",
+    "itemCount": "物品记录",
+    "batchScan": "批量扫描导入",
+    "parentFolder": "父文件夹路径",
+    "parentFolderPlaceholder": "例如: /path/to/backups",
+    "batchHint": "父文件夹下的每个子文件夹将被视为一次备份，文件夹名将作为日期解析",
+    "startBatchScan": "开始批量扫描",
+    "batchScanSuccess": "批量扫描导入完成",
+    "exportTitle": "导出数据为 JSON",
+    "exportHint": "将数据库中的所有数据导出为 JSON 文件，供静态模式使用",
+    "startExport": "开始导出",
+    "exportSuccess": "数据导出成功",
+    "deleteByDate": "按日期删除",
+    "selectDate": "选择日期",
+    "confirmDelete": "确认删除",
+    "deleteSuccess": "已删除 {date} 的数据",
+    "mapDeleted": "地图记录删除",
+    "playerDeleted": "玩家记录删除",
+    "detailDeleted": "详细记录删除",
+    "batchDelete": "批量删除",
+    "selectedCount": "已选择 {n} 个日期",
+    "confirmBatchDelete": "删除选中的 {n} 个日期",
+    "batchDeleteSuccess": "批量删除完成",
+    "totalDates": "涉及日期数",
+    "operationFailed": "操作失败"
   }
 }

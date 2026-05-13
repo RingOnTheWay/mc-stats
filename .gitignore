@@ -33,6 +33,7 @@ claude-*
 
 # Local dev
 server_example/
+page_example/
 uv.lock
 
 # Other

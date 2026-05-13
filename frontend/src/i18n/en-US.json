@@ -10,7 +10,8 @@
     "battleStats": "Battle Stats",
     "craftStats": "Craft Stats",
     "itemStats": "Item Stats",
-    "activity": "Activity"
+    "activity": "Activity",
+    "dataManage": "Data Manage"
   },
   "common": {
     "loading": "Loading...",
@@ -83,5 +84,44 @@
   "lang": {
     "switchTo": "中文",
     "current": "English"
+  },
+  "dataManage": {
+    "importTab": "Import",
+    "exportTab": "Export",
+    "manageTab": "Manage",
+    "singleScan": "Single Scan Import",
+    "serverFolder": "Server Folder Path",
+    "folderPlaceholder": "e.g. /path/to/server",
+    "scanDate": "Scan Date",
+    "startScan": "Start Scan",
+    "scanSuccess": "Scan import successful",
+    "date": "Date",
+    "playerCount": "Player Count",
+    "battleCount": "Battle Records",
+    "craftCount": "Craft Records",
+    "itemCount": "Item Records",
+    "batchScan": "Batch Scan Import",
+    "parentFolder": "Parent Folder Path",
+    "parentFolderPlaceholder": "e.g. /path/to/backups",
+    "batchHint": "Each subfolder under the parent folder will be treated as a backup, folder name will be parsed as date",
+    "startBatchScan": "Start Batch Scan",
+    "batchScanSuccess": "Batch scan import completed",
+    "exportTitle": "Export Data as JSON",
+    "exportHint": "Export all data from database to a JSON file for static mode usage",
+    "startExport": "Start Export",
+    "exportSuccess": "Data export successful",
+    "deleteByDate": "Delete by Date",
+    "selectDate": "Select Date",
+    "confirmDelete": "Confirm Delete",
+    "deleteSuccess": "Deleted data for {date}",
+    "mapDeleted": "Map Records Deleted",
+    "playerDeleted": "Player Records Deleted",
+    "detailDeleted": "Detail Records Deleted",
+    "batchDelete": "Batch Delete",
+    "selectedCount": "{n} date(s) selected",
+    "confirmBatchDelete": "Delete {n} selected date(s)",
+    "batchDeleteSuccess": "Batch delete completed",
+    "totalDates": "Total Dates",
+    "operationFailed": "Operation failed"
   }
 }
