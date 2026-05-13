@@ -20,7 +20,11 @@
     "selectAll": "全选",
     "deselectAll": "清空",
     "viewDetail": "查看详情 →",
-    "topN": "Top {n}"
+    "topN": "Top {n}",
+    "total": "总计",
+    "name": "名称",
+    "count": "数量",
+    "item": "物品"
   },
   "dashboard": {
     "totalDays": "统计天数",
@@ -65,7 +69,8 @@
     "horse": "骑马",
     "boat": "划船",
     "aviate": "鞘翅飞行",
-    "fall": "坠落"
+    "fall": "坠落",
+    "unit": "距离 (cm)"
   },
   "playerStats": {
     "playTime": "游戏时长 (小时)",

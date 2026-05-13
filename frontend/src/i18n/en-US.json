@@ -20,7 +20,11 @@
     "selectAll": "Select All",
     "deselectAll": "Deselect All",
     "viewDetail": "View Detail →",
-    "topN": "Top {n}"
+    "topN": "Top {n}",
+    "total": "Total",
+    "name": "Name",
+    "count": "Count",
+    "item": "Item"
   },
   "dashboard": {
     "totalDays": "Total Days",
@@ -65,7 +69,8 @@
     "horse": "Horse",
     "boat": "Boat",
     "aviate": "Elytra",
-    "fall": "Fall"
+    "fall": "Fall",
+    "unit": "Distance (cm)"
   },
   "playerStats": {
     "playTime": "Play Time (hours)",

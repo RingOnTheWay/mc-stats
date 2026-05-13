@@ -57,12 +57,12 @@ const chartData = computed(() => {
         data: ds.map(date => Math.round(statData[date]?.[p] || 0)),
         backgroundColor: colors[i] || '#888',
       })),
-      { label: locale.value === 'zh-CN' ? '总计' : 'Total', data: ds.map(date => Math.round(players.reduce((sum, p) => sum + (statData[date]?.[p] || 0), 0))), backgroundColor: 'rgba(255,107,107,0.5)', borderColor: '#FF6B6B', borderWidth: 2, hidden: true },
+      { label: t('common.total'), data: ds.map(date => Math.round(players.reduce((sum, p) => sum + (statData[date]?.[p] || 0), 0))), backgroundColor: 'rgba(255,107,107,0.5)', borderColor: '#FF6B6B', borderWidth: 2, hidden: true },
     ],
   }
 })
 
-const yAxisLabel = computed(() => locale.value === 'zh-CN' ? '距离 (cm)' : 'Distance (cm)')
+const yAxisLabel = computed(() => t('activity.unit'))
 </script>
 
 <template>

@@ -50,7 +50,7 @@ const chartData = computed(() => {
         backgroundColor: colors[i] || '#888', borderColor: colors[i] || '#888',
       })),
       {
-        label: locale.value === 'zh-CN' ? '总计' : 'Total',
+        label: t('common.total'),
         data: ds.map(date => {
           const total = players.reduce((sum, p) => {
             const pd = sd[date]?.[p] || {}
@@ -97,7 +97,7 @@ const topMobs = computed(() => {
       <h3 style="margin-bottom:12px;font-weight:500">{{ t('common.topN', { n: 10 }) }}</h3>
       <table style="width:100%;border-collapse:collapse">
         <thead><tr style="text-align:left;border-bottom:1px solid var(--md-sys-color-outline-variant)">
-          <th style="padding:8px">#</th><th style="padding:8px">{{ locale === 'zh-CN' ? '名称' : 'Name' }}</th><th style="padding:8px;text-align:right">{{ locale === 'zh-CN' ? '数量' : 'Count' }}</th>
+          <th style="padding:8px">#</th><th style="padding:8px">{{ t('common.name') }}</th><th style="padding:8px;text-align:right">{{ t('common.count') }}</th>
         </tr></thead>
         <tbody>
           <tr v-for="(item, i) in topMobs" :key="item.key" style="border-bottom:1px solid var(--md-sys-color-outline-variant)">
