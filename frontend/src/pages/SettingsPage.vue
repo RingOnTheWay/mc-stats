@@ -102,7 +102,7 @@ function toggleNav(key: NavKey) {
     </div>
 
     <div
-      v-motion-slide-bottom="{ delay: 50 }"
+      v-motion-slide-bottom :delay="50"
       class="relative bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm rounded-2xl p-8 border border-white/80 dark:border-slate-700/80 shadow-sm overflow-hidden"
     >
       <div class="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-brand/5 dark:from-brand/3 to-transparent rounded-full blur-3xl" />
@@ -151,7 +151,7 @@ function toggleNav(key: NavKey) {
               :class="[
                 isNavDisabled(item.key)
                   ? 'bg-slate-200 dark:bg-slate-600 cursor-not-allowed'
-                  : app.navVisibility[item.key]
+                  : app.isNavVisible(item.key)
                     ? 'bg-brand'
                     : 'bg-slate-300 dark:bg-slate-600'
               ]"
@@ -160,7 +160,7 @@ function toggleNav(key: NavKey) {
             >
               <div
                 class="absolute top-1 w-4 h-4 rounded-full bg-white shadow-sm transition-all duration-300"
-                :class="app.navVisibility[item.key] ? 'left-5' : 'left-1'"
+                :class="app.isNavVisible(item.key) ? 'left-5' : 'left-1'"
               />
             </button>
           </div>
@@ -169,7 +169,7 @@ function toggleNav(key: NavKey) {
     </div>
 
     <div
-      v-motion-slide-bottom="{ delay: 75 }"
+      v-motion-slide-bottom :delay="75"
       class="relative bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm rounded-2xl p-8 border border-white/80 dark:border-slate-700/80 shadow-sm overflow-hidden"
     >
       <div class="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-brand/5 dark:from-brand/3 to-transparent rounded-full blur-3xl" />
@@ -201,7 +201,7 @@ function toggleNav(key: NavKey) {
     </div>
 
     <div
-      v-motion-slide-bottom="{ delay: 100 }"
+      v-motion-slide-bottom :delay="100"
       class="relative bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm rounded-2xl p-8 border border-white/80 dark:border-slate-700/80 shadow-sm overflow-hidden"
     >
       <div class="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-brand/5 dark:from-brand/3 to-transparent rounded-full blur-3xl" />

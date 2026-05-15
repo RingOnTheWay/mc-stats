@@ -36,12 +36,12 @@
     "totalDays": "统计天数",
     "playerCount": "玩家数量",
     "dateRange": "日期范围",
-    "mapTrend": "地图大小趋势",
+    "mapTrend": "地图大小趋势(MB)",
     "latestMap": "最新地图大小",
     "subtitle": "服务器数据概览"
   },
   "map": {
-    "title": "地图大小变化",
+    "title": "地图大小变化(MB)",
     "world": "主世界",
     "nether": "下界",
     "end": "末地",

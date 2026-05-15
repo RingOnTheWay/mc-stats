@@ -55,11 +55,11 @@ const statCards = computed(() => [
 ])
 
 const navItems = computed(() => [
-  { icon: Map, label: t('nav.mapStats'), path: '/map', color: 'from-blue-500 to-cyan-500' },
-  { icon: Users, label: t('nav.playerStats'), path: '/players', color: 'from-purple-500 to-pink-500' },
-  { icon: Swords, label: t('nav.battleStats'), path: '/battle', color: 'from-red-500 to-orange-500' },
-  { icon: Hammer, label: t('nav.craftStats'), path: '/craft', color: 'from-amber-500 to-yellow-500' },
-  { icon: Package, label: t('nav.itemStats'), path: '/items', color: 'from-emerald-500 to-teal-500' },
+  { icon: Map, label: t('nav.mapStats'), path: '/map', color: 'from-blue-500 to-cyan-500', hoverShadow: 'hover:shadow-blue-200 dark:hover:shadow-blue-900/40' },
+  { icon: Users, label: t('nav.playerStats'), path: '/players', color: 'from-purple-500 to-pink-500', hoverShadow: 'hover:shadow-purple-200 dark:hover:shadow-purple-900/40' },
+  { icon: Swords, label: t('nav.battleStats'), path: '/battle', color: 'from-red-500 to-orange-500', hoverShadow: 'hover:shadow-red-200 dark:hover:shadow-red-900/40' },
+  { icon: Hammer, label: t('nav.craftStats'), path: '/craft', color: 'from-amber-500 to-yellow-500', hoverShadow: 'hover:shadow-amber-200 dark:hover:shadow-amber-900/40' },
+  { icon: Package, label: t('nav.itemStats'), path: '/items', color: 'from-emerald-500 to-teal-500', hoverShadow: 'hover:shadow-emerald-200 dark:hover:shadow-emerald-900/40' },
 ])
 
 function goPage(path: string) { router.push(path) }
@@ -113,9 +113,13 @@ const mapGrowth = computed(() => {
         v-for="(card, index) in statCards"
         :key="index"
         v-motion-slide-bottom="{ delay: index * 100 }"
-        class="group relative bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm rounded-2xl p-8 border border-white/80 dark:border-slate-700/80 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+        class="group relative bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm rounded-2xl p-8 border border-white/80 dark:border-slate-700/80 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02] transition-all duration-300 overflow-hidden"
       >
         <div :class="`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`" />
+
+        <div :class="`absolute top-4 right-4 opacity-10 group-hover:opacity-20 transition-opacity`">
+          <component :is="card.icon" class="w-16 h-16 text-brand dark:text-brand-light" />
+        </div>
 
         <div class="relative space-y-3">
           <div class="w-12 h-12 bg-gradient-to-br from-brand/20 dark:from-brand/20 to-brand/10 dark:to-brand/15 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
@@ -136,13 +140,16 @@ const mapGrowth = computed(() => {
         v-for="(item, index) in navItems"
         :key="item.path"
         v-motion-slide-bottom="{ delay: 300 + index * 100 }"
-        class="relative bg-white dark:bg-slate-800 rounded-2xl p-8 border border-white/80 dark:border-slate-700/80 shadow-sm hover:shadow-lg transition-all duration-300 group overflow-hidden"
+        :class="[item.hoverShadow]"
+        class="relative bg-white dark:bg-slate-800 rounded-2xl p-8 border border-white/80 dark:border-slate-700/80 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group overflow-hidden"
         @click="goPage(item.path)"
       >
         <div :class="`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`" />
 
+        <div class="absolute -top-8 -right-8 w-24 h-24 bg-gradient-to-br from-brand/5 dark:from-brand/3 to-transparent rounded-full group-hover:scale-150 transition-transform duration-500" />
+
         <div class="relative flex flex-col items-center gap-4">
-          <div :class="`w-16 h-16 bg-gradient-to-br ${item.color} opacity-60 rounded-xl flex items-center justify-center group-hover:opacity-100 transition-all duration-300`">
+          <div :class="`w-16 h-16 bg-gradient-to-br ${item.color} opacity-60 rounded-xl flex items-center justify-center group-hover:opacity-100 group-hover:rotate-3 transition-all duration-300`">
             <component :is="item.icon" class="w-8 h-8 text-white" />
           </div>
           <span class="text-sm font-medium text-slate-700 dark:text-slate-300 group-hover:text-brand dark:group-hover:text-brand-light transition-colors">

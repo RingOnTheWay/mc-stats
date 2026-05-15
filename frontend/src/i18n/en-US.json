@@ -36,12 +36,12 @@
     "totalDays": "Total Days",
     "playerCount": "Player Count",
     "dateRange": "Date Range",
-    "mapTrend": "Map Size Trend",
+    "mapTrend": "Map Size Trend (MB)",
     "latestMap": "Latest Map Size",
     "subtitle": "Server data overview"
   },
   "map": {
-    "title": "Map Size Over Time",
+    "title": "Map Size Over Time (MB)",
     "world": "Overworld",
     "nether": "Nether",
     "end": "The End",

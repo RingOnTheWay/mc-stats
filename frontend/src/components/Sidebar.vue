@@ -61,7 +61,7 @@ function toggleLocale() {
       <button
         v-for="(item, index) in menuItems"
         :key="item.path"
-        v-motion-slide-left="{ delay: index * 50 }"
+        v-motion-slide-left :delay="index * 50"
         class="relative w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-300 group"
         :class="!isSettingsPage && currentPath === item.path
           ? 'nav-item-active'

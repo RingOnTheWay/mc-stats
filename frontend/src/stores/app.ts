@@ -121,12 +121,12 @@ export const useAppStore = defineStore('app', () => {
   }
 
   function toggleNavVisibility(key: NavKey) {
-    if (key === '/data-manage' && isStatic) return
+    if (key === '/data-manage' && isStatic.value) return
     navVisibility.value[key] = !navVisibility.value[key]
   }
 
   function isNavVisible(key: NavKey): boolean {
-    if (key === '/data-manage' && isStatic) return false
+    if (key === '/data-manage' && isStatic.value) return false
     return navVisibility.value[key]
   }
 

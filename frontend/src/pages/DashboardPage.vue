@@ -112,7 +112,7 @@ const mapGrowth = computed(() => {
       <div
         v-for="(card, index) in statCards"
         :key="index"
-        v-motion-slide-bottom="{ delay: index * 100 }"
+        v-motion-slide-bottom :delay="index * 100"
         class="group relative bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm rounded-2xl p-8 border border-white/80 dark:border-slate-700/80 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02] transition-all duration-300 overflow-hidden"
       >
         <div :class="`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`" />
@@ -139,7 +139,7 @@ const mapGrowth = computed(() => {
       <button
         v-for="(item, index) in navItems"
         :key="item.path"
-        v-motion-slide-bottom="{ delay: 300 + index * 100 }"
+        v-motion-slide-bottom :delay="300 + index * 100"
         :class="[item.hoverShadow]"
         class="relative bg-white dark:bg-slate-800 rounded-2xl p-8 border border-white/80 dark:border-slate-700/80 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group overflow-hidden"
         @click="goPage(item.path)"
@@ -161,7 +161,7 @@ const mapGrowth = computed(() => {
 
     <div
       v-if="mapChartSeries.length > 0 && mapChartSeries[0].data.length > 0"
-      v-motion-slide-bottom="{ delay: 600 }"
+      v-motion-slide-bottom :delay="600"
       class="relative bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm rounded-2xl p-8 border border-white/80 dark:border-slate-700/80 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group"
     >
       <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-brand/5 dark:from-brand/3 to-transparent rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
