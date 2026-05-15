@@ -3,14 +3,10 @@ import { ref, onMounted, computed } from 'vue'
 import { useDataStore } from '@/stores/data'
 import { usePlayerFilter } from '@/services/usePlayerFilter'
 import { useI18n } from 'vue-i18n'
-import { Bar } from 'vue-chartjs'
-import {
-  Chart as ChartJS, CategoryScale, LinearScale, BarElement,
-  Title, Tooltip, Legend
-} from 'chart.js'
+import ChartContainer from '@/components/ChartContainer.vue'
+import type { ChartSeries } from '@/components/ChartContainer.vue'
+import { TrendingUp } from 'lucide-vue-next'
 import PlayerFilter from '@/components/PlayerFilter.vue'
-
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 const { t, locale } = useI18n()
 
@@ -45,43 +41,63 @@ function getColors(n: number) {
   return c
 }
 
-const chartData = computed(() => {
+const chartLabels = computed(() => data.allDates)
+
+const chartSeries = computed<ChartSeries[]>(() => {
   const statData = (data.playerStats as any)[currentKey.value] || {}
   const ds = data.allDates; const players = activePlayers.value
   const colors = getColors(players.length + 1)
-  return {
-    labels: ds,
-    datasets: [
-      ...players.map((p, i) => ({
-        label: p,
-        data: ds.map(date => Math.round(statData[date]?.[p] || 0)),
-        backgroundColor: colors[i] || '#888',
-      })),
-      { label: t('common.total'), data: ds.map(date => Math.round(players.reduce((sum, p) => sum + (statData[date]?.[p] || 0), 0))), backgroundColor: 'rgba(255,107,107,0.5)', borderColor: '#FF6B6B', borderWidth: 2, hidden: true },
-    ],
-  }
+  return [
+    ...players.map((p, i) => ({
+      name: p,
+      data: ds.map(date => Math.round(statData[date]?.[p] || 0)),
+      color: colors[i] || '#888',
+      type: 'bar' as const,
+    })),
+    { name: t('common.total'), data: ds.map(date => Math.round(players.reduce((sum, p) => sum + (statData[date]?.[p] || 0), 0))), color: '#FF6B6B', type: 'bar' as const },
+  ]
 })
 
 const yAxisLabel = computed(() => t('activity.unit'))
 </script>
 
 <template>
-  <div>
-    <div class="stat-tabs">
-      <button v-for="key in ACTIVITY_KEYS" :key="key" :class="{ active: currentKey === key }"
-              @click="currentKey = key">{{ t(ACTIVITY_LABELS[key]) }}</button>
+  <div class="space-y-6">
+    <div class="flex gap-2 flex-wrap">
+      <button
+        v-for="key in ACTIVITY_KEYS"
+        :key="key"
+        class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+        :class="currentKey === key
+          ? 'subnav-active'
+          : 'subnav-inactive'"
+        @click="currentKey = key"
+      >
+        {{ t(ACTIVITY_LABELS[key]) }}
+      </button>
     </div>
+
     <PlayerFilter :filter="filter" />
-    <div class="surface-card" style="padding:20px;border-radius:16px">
-      <h3 style="margin-bottom:12px;font-weight:500">{{ currentLabel }}</h3>
-      <Bar :data="chartData" :options="{ responsive:true, plugins:{legend:{position:'bottom' as const,labels:{usePointStyle:true,pointStyle:'circle',padding:20,font:{size:12}}}}, scales:{y:{beginAtZero:true,title:{display:true,text:yAxisLabel}}} }" style="max-height:400px" />
+
+    <div class="relative bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm rounded-2xl p-8 border border-white/80 dark:border-slate-700/80 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group">
+      <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-brand/5 dark:from-brand/3 to-transparent rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+      <div class="relative">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-12 h-12 bg-gradient-to-br from-brand/20 dark:from-brand/20 to-brand/10 dark:to-brand/15 rounded-xl flex items-center justify-center">
+            <TrendingUp class="w-6 h-6 text-brand dark:text-brand-light" />
+          </div>
+          <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-100">{{ currentLabel }}</h3>
+        </div>
+
+        <ChartContainer
+          :labels="chartLabels"
+          :series="chartSeries"
+          :y-axis-label="yAxisLabel"
+          chart-type="bar"
+          height="400px"
+        />
+      </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.stat-tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-.stat-tabs button { padding: 8px 16px; border-radius: 20px; border: 1px solid var(--md-sys-color-outline); background: none; color: var(--md-sys-color-on-surface); font-size: 13px; cursor: pointer; }
-.stat-tabs button.active { background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); border-color: var(--md-sys-color-primary); }
-.surface-card { background: var(--md-sys-color-surface-container-low); }
-</style>

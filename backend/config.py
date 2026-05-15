@@ -3,7 +3,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DB_FILE = str(BASE_DIR / 'mc_stats.db')
+DB_FILE = str(BASE_DIR / 'minetrack.db')
 DATA_JSON = str(BASE_DIR / 'data.json')
 
 HOST = '0.0.0.0'

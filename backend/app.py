@@ -10,6 +10,6 @@ def create_app() -> Flask:
 
     @app.route('/')
     def index():
-        return 'MC Stats API Server'
+        return 'MineTrack API Server'
 
     return app

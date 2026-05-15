@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "MC Stats",
+    "title": "MineTrack",
     "subtitle": "Minecraft 服务器统计"
   },
   "nav": {
@@ -16,5 +16,8 @@
     "loading": "加载中...",
     "noData": "暂无数据",
     "allPlayers": "全部玩家"
+  },
+  "dataManage": {
+    "deleteAllConfirm": "确认删除全部数据"
   }
 }

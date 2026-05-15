@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "MC Stats",
+    "title": "MineTrack",
     "subtitle": "Minecraft Server Statistics"
   },
   "nav": {
@@ -16,5 +16,8 @@
     "loading": "Loading...",
     "noData": "No Data",
     "allPlayers": "All Players"
+  },
+  "dataManage": {
+    "deleteAllConfirm": "Confirm Delete All Data"
   }
 }

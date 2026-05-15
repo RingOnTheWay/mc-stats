@@ -1,7 +1,7 @@
 [project]
-name = "mc-stats"
+name = "minetrack"
 version = "0.2.0"
-description = "Minecraft服务器数据统计系统 - 分层架构"
+description = "MineTrack"
 requires-python = ">=3.9"
 dependencies = [
     "flask>=3.0.0",
@@ -10,4 +10,4 @@ dependencies = [
 ]
 
 [project.scripts]
-mc-stats = "backend.main:main"
+minetrack = "backend.main:main"

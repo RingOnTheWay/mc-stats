@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { usePlayerFilter } from '@/services/usePlayerFilter'
 import { useI18n } from 'vue-i18n'
+import { ChevronDown, X, Check, Users } from 'lucide-vue-next'
 
 const { t } = useI18n()
 
@@ -61,34 +62,51 @@ onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside))
 </script>
 
 <template>
-  <div class="player-filter" ref="dropdownRef">
-    <span class="filter-label">{{ t('common.filterPlayers') }}</span>
-    <div class="filter-select" :class="{ open }">
-      <div class="select-display" @click="toggleDropdown">
-        <div class="badge-area">
+  <div ref="dropdownRef" class="flex items-center gap-3">
+    <div class="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-400 whitespace-nowrap">
+      <Users class="w-4 h-4 text-brand dark:text-brand-light" />
+      <span>{{ t('common.filterPlayers') }}</span>
+    </div>
+    <div class="relative flex-1 max-w-[600px]">
+      <div
+        class="flex items-center justify-between px-3 py-2 rounded-xl border bg-white/80 dark:bg-slate-800/80 cursor-pointer transition-all min-h-[44px] gap-2"
+        :class="open ? 'border-brand/40 ring-2 ring-brand/20' : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'"
+        @click="toggleDropdown"
+      >
+        <div class="flex flex-wrap gap-1.5 flex-1 min-w-0">
           <template v-if="isAll">
-            <span class="badge badge-all">{{ t('common.allPlayers') }}</span>
+            <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400">{{ t('common.allPlayers') }}</span>
           </template>
           <template v-else>
-            <span v-for="p in visibleBadges" :key="p" class="badge">
+            <span v-for="p in visibleBadges" :key="p" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-brand/10 dark:bg-brand/20 text-brand dark:text-brand-light">
               {{ p }}
-              <button class="badge-remove" @click.stop="removePlayer(p, $event)">×</button>
+              <button class="hover:bg-brand/20 dark:hover:bg-brand/30 rounded-full p-0.5 transition-colors" @click.stop="removePlayer(p, $event)">
+                <X class="w-3 h-3" />
+              </button>
             </span>
-            <span v-if="remainingCount > 0" class="badge badge-more">+{{ remainingCount }}</span>
+            <span v-if="remainingCount > 0" class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-brand text-white">
+              +{{ remainingCount }}
+            </span>
           </template>
         </div>
-        <span class="material-symbols-outlined select-arrow">expand_more</span>
+        <ChevronDown class="w-4 h-4 text-slate-400 dark:text-slate-500 transition-transform flex-shrink-0" :class="{ 'rotate-180': open }" />
       </div>
-      <div v-if="open" class="select-dropdown" @click.stop>
-        <div class="dropdown-actions">
-          <button class="action-btn" @click="handleSelectAll">{{ t('common.selectAll') }}</button>
-          <button class="action-btn" @click="handleDeselectAll">{{ t('common.deselectAll') }}</button>
+
+      <div v-if="open" class="absolute top-full mt-1 left-0 right-0 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border border-slate-200 dark:border-slate-600 rounded-xl shadow-xl z-50 overflow-hidden" @click.stop>
+        <div class="flex gap-2 p-3 border-b border-slate-100 dark:border-slate-700">
+          <button class="px-3 py-1.5 bg-brand/10 dark:bg-brand/20 text-brand dark:text-brand-light rounded-lg text-xs font-medium hover:bg-brand/20 dark:hover:bg-brand/30 transition-all" @click="handleSelectAll">{{ t('common.selectAll') }}</button>
+          <button class="px-3 py-1.5 bg-brand/10 dark:bg-brand/20 text-brand dark:text-brand-light rounded-lg text-xs font-medium hover:bg-brand/20 dark:hover:bg-brand/30 transition-all" @click="handleDeselectAll">{{ t('common.deselectAll') }}</button>
         </div>
-        <div class="dropdown-list">
-          <label v-for="p in filter.sortedPlayers.value" :key="p" class="dropdown-item" :class="{ selected: selectedSet.has(p) }">
-            <input type="checkbox" :checked="selectedSet.has(p)" @change="togglePlayer(p)" />
-            <span>{{ p }}</span>
-            <span v-if="selectedSet.has(p)" class="material-symbols-outlined check-icon">check</span>
+        <div class="max-h-[260px] overflow-y-auto hide-scrollbar p-1">
+          <label
+            v-for="p in filter.sortedPlayers.value"
+            :key="p"
+            class="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all text-sm"
+            :class="selectedSet.has(p) ? 'bg-brand/10 dark:bg-brand/20 text-brand dark:text-brand-light' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50'"
+          >
+            <input type="checkbox" :checked="selectedSet.has(p)" @change="togglePlayer(p)" class="accent-brand" />
+            <span class="flex-1">{{ p }}</span>
+            <Check v-if="selectedSet.has(p)" class="w-4 h-4 text-brand dark:text-brand-light" />
           </label>
         </div>
       </div>
@@ -97,158 +115,12 @@ onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside))
 </template>
 
 <style scoped>
-.player-filter {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-.filter-label {
-  font-weight: 500;
-  font-size: 14px;
-  color: var(--md-sys-color-on-surface-variant);
-  white-space: nowrap;
-}
-.filter-select {
-  position: relative;
-  flex: 1;
-  max-width: 600px;
-}
-.select-display {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 12px;
-  border-radius: 12px;
-  border: 1px solid var(--md-sys-color-outline-variant);
-  background: var(--md-sys-color-surface-container-low);
-  cursor: pointer;
-  transition: border-color 0.2s;
-  min-height: 44px;
-  gap: 8px;
-}
-.filter-select.open .select-display {
-  border-color: var(--md-sys-color-primary);
-}
-.badge-area {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  flex: 1;
-  min-width: 0;
-}
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 3px 10px;
-  border-radius: 16px;
-  font-size: 12px;
-  font-weight: 500;
-  background: var(--md-sys-color-secondary-container);
-  color: var(--md-sys-color-on-secondary-container);
-  white-space: nowrap;
-  line-height: 1.4;
-}
-.badge-all {
-  background: var(--md-sys-color-surface-container-highest);
-  color: var(--md-sys-color-on-surface-variant);
-}
-.badge-more {
-  background: var(--md-sys-color-primary-container);
-  color: var(--md-sys-color-on-primary-container);
-}
-.badge-remove {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: none;
-  background: transparent;
-  color: var(--md-sys-color-on-secondary-container);
-  font-size: 14px;
-  line-height: 1;
-  cursor: pointer;
-  padding: 0;
-}
-.badge-remove:hover {
-  background: rgba(0,0,0,0.12);
-}
-.select-arrow {
-  font-size: 20px;
-  color: var(--md-sys-color-on-surface-variant);
-  transition: transform 0.2s;
-  flex-shrink: 0;
-}
-.filter-select.open .select-arrow {
-  transform: rotate(180deg);
-}
-.select-dropdown {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  right: 0;
-  background: var(--md-sys-color-surface-container-low);
-  border: 1px solid var(--md-sys-color-outline-variant);
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-  z-index: 200;
-  overflow: hidden;
-}
-.dropdown-actions {
-  display: flex;
-  gap: 8px;
-  padding: 8px 12px;
-  border-bottom: 1px solid var(--md-sys-color-outline-variant);
-}
-.action-btn {
-  font-size: 12px;
-  color: var(--md-sys-color-primary);
-  padding: 4px 10px;
-  border-radius: 8px;
-  background: var(--md-sys-color-primary-container);
-}
-.action-btn:hover {
-  opacity: 0.85;
-}
-.dropdown-list {
-  max-height: 260px;
-  overflow-y: scroll;
-  padding: 4px 0;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.dropdown-list::-webkit-scrollbar {
+.hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
-.dropdown-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 14px;
-  cursor: pointer;
-  font-size: 14px;
-  color: var(--md-sys-color-on-surface);
-  transition: background 0.15s;
-}
-.dropdown-item:hover {
-  background: var(--md-sys-color-surface-container-highest);
-}
-.dropdown-item.selected {
-  background: var(--md-sys-color-secondary-container);
-  color: var(--md-sys-color-on-secondary-container);
-}
-.dropdown-item input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  accent-color: var(--md-sys-color-primary);
-  cursor: pointer;
-}
-.check-icon {
-  font-size: 18px;
-  color: var(--md-sys-color-primary);
-  margin-left: auto;
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 </style>

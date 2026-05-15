@@ -4,14 +4,10 @@ import { useDataStore } from '@/stores/data'
 import { usePlayerFilter } from '@/services/usePlayerFilter'
 import { useI18n } from 'vue-i18n'
 import { getItemName } from '@/i18n/items'
-import { Bar } from 'vue-chartjs'
-import {
-  Chart as ChartJS, CategoryScale, LinearScale, BarElement,
-  Title, Tooltip, Legend
-} from 'chart.js'
+import ChartContainer from '@/components/ChartContainer.vue'
+import type { ChartSeries } from '@/components/ChartContainer.vue'
+import { Package, Trophy } from 'lucide-vue-next'
 import PlayerFilter from '@/components/PlayerFilter.vue'
-
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 const { t, locale } = useI18n()
 const data = useDataStore()
@@ -36,23 +32,23 @@ const categoryLabel: Record<string, string> = {
   picked_up: t('item.picked_up'), dropped: t('item.dropped'), used: t('item.used'),
 }
 
-const chartData = computed(() => {
+const chartLabels = computed(() => dates.value)
+
+const chartSeries = computed<ChartSeries[]>(() => {
   const sd = statData.value; const ds = dates.value; const players = activePlayers.value
   const colors = getColors(players.length + 1)
-  return {
-    labels: ds,
-    datasets: [
-      ...players.map((p, i) => ({
-        label: p,
-        data: ds.map(date => {
-          const pd = sd[date]?.[p] || {}
-          return Object.values(pd as Record<string, number>).reduce((s, v) => s + v, 0)
-        }),
-        backgroundColor: colors[i] || '#888',
-      })),
-      { label: t('common.total'), data: ds.map(date => players.reduce((sum, p) => { const pd = sd[date]?.[p] || {}; return sum + Object.values(pd as Record<string, number>).reduce((s, v) => s + v, 0) }, 0)), backgroundColor: 'rgba(255,107,107,0.5)', borderColor: '#FF6B6B', borderWidth: 2, hidden: true },
-    ],
-  }
+  return [
+    ...players.map((p, i) => ({
+      name: p,
+      data: ds.map(date => {
+        const pd = sd[date]?.[p] || {}
+        return Object.values(pd as Record<string, number>).reduce((s, v) => s + v, 0)
+      }),
+      color: colors[i] || '#888',
+      type: 'bar' as const,
+    })),
+    { name: t('common.total'), data: ds.map(date => players.reduce((sum, p) => { const pd = sd[date]?.[p] || {}; return sum + Object.values(pd as Record<string, number>).reduce((s, v) => s + v, 0) }, 0)), color: '#FF6B6B', type: 'bar' as const },
+  ]
 })
 
 const topItems = computed(() => {
@@ -68,41 +64,86 @@ const topItems = computed(() => {
   })
   return Object.entries(totals).sort((a, b) => b[1] - a[1]).slice(0, 10).map(([key, count]) => ({ key, name: getItemName(key, _l), count }))
 })
+
+const rankColors = ['#FFD700', '#C0C0C0', '#CD7F32']
 </script>
 
 <template>
-  <div>
-    <div class="stat-tabs">
-      <button :class="{ active: category === 'picked_up' }" @click="category = 'picked_up'">{{ t('item.picked_up') }}</button>
-      <button :class="{ active: category === 'dropped' }" @click="category = 'dropped'">{{ t('item.dropped') }}</button>
-      <button :class="{ active: category === 'used' }" @click="category = 'used'">{{ t('item.used') }}</button>
+  <div class="space-y-6">
+    <div class="flex gap-2">
+      <button
+        v-for="cat in ['picked_up', 'dropped', 'used']"
+        :key="cat"
+        class="px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+        :class="category === cat
+          ? 'subnav-active'
+          : 'subnav-inactive'"
+        @click="category = cat as any"
+      >
+        {{ categoryLabel[cat] }}
+      </button>
     </div>
+
     <PlayerFilter :filter="filter" />
-    <div class="surface-card" style="padding:20px;border-radius:16px;margin-bottom:16px">
-      <h3 style="margin-bottom:12px;font-weight:500">{{ categoryLabel[category] }}</h3>
-      <Bar :data="chartData" :options="{ responsive:true, plugins:{legend:{position:'bottom' as const,labels:{usePointStyle:true,pointStyle:'circle',padding:20,font:{size:12}}}} }" style="max-height:400px" />
+
+    <div class="relative bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm rounded-2xl p-8 border border-white/80 dark:border-slate-700/80 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group">
+      <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-brand/5 dark:from-brand/3 to-transparent rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+      <div class="relative">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-12 h-12 bg-gradient-to-br from-brand/20 dark:from-brand/20 to-brand/10 dark:to-brand/15 rounded-xl flex items-center justify-center">
+            <Package class="w-6 h-6 text-brand dark:text-brand-light" />
+          </div>
+          <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-100">{{ categoryLabel[category] }}</h3>
+        </div>
+
+        <ChartContainer
+          :labels="chartLabels"
+          :series="chartSeries"
+          chart-type="bar"
+          height="400px"
+        />
+      </div>
     </div>
-    <div class="surface-card" style="padding:20px;border-radius:16px">
-      <h3 style="margin-bottom:12px;font-weight:500">{{ t('common.topN', { n: 10 }) }}</h3>
-      <table style="width:100%;border-collapse:collapse">
-        <thead><tr style="text-align:left;border-bottom:1px solid var(--md-sys-color-outline-variant)">
-          <th style="padding:8px">#</th><th style="padding:8px">{{ t('common.item') }}</th><th style="padding:8px;text-align:right">{{ t('common.count') }}</th>
-        </tr></thead>
-        <tbody>
-          <tr v-for="(item, i) in topItems" :key="item.key" style="border-bottom:1px solid var(--md-sys-color-outline-variant)">
-            <td style="padding:8px"><span :style="{display:'inline-block',width:'28px',height:'28px',lineHeight:'28px',textAlign:'center',borderRadius:'50%',background:i===0?'#FFD700':i===1?'#C0C0C0':i===2?'#CD7F32':'var(--md-sys-color-surface-container-highest)',color:i<3?'#000':'inherit',fontWeight:'bold',fontSize:12}">{{ i + 1 }}</span></td>
-            <td style="padding:8px">{{ item.name }}</td>
-            <td style="padding:8px;text-align:right;fontWeight:500">{{ item.count }}</td>
-          </tr>
-        </tbody>
-      </table>
+
+    <div class="relative bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm rounded-2xl p-8 border border-white/80 dark:border-slate-700/80 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group">
+      <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-brand/5 dark:from-brand/3 to-transparent rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+      <div class="relative">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-12 h-12 bg-gradient-to-br from-brand/20 dark:from-brand/20 to-brand/10 dark:to-brand/15 rounded-xl flex items-center justify-center">
+            <Trophy class="w-6 h-6 text-brand dark:text-brand-light" />
+          </div>
+          <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-100">{{ t('common.topN', { n: 10 }) }}</h3>
+        </div>
+
+        <div class="overflow-hidden rounded-xl border border-slate-100 dark:border-slate-700">
+          <table class="w-full">
+            <thead>
+              <tr class="bg-slate-50/80 dark:bg-slate-800/80">
+                <th class="px-4 py-3 text-left text-sm font-medium text-slate-600 dark:text-slate-400">#</th>
+                <th class="px-4 py-3 text-left text-sm font-medium text-slate-600 dark:text-slate-400">{{ t('common.item') }}</th>
+                <th class="px-4 py-3 text-right text-sm font-medium text-slate-600 dark:text-slate-400">{{ t('common.count') }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, i) in topItems" :key="item.key" class="border-t border-slate-100 dark:border-slate-700 hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors">
+                <td class="px-4 py-3">
+                  <span
+                    class="inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold"
+                    :class="i >= 3 ? 'bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400 dark:ring-1 dark:ring-slate-600' : ''"
+                    :style="i < 3 ? { background: rankColors[i], color: '#000' } : undefined"
+                  >
+                    {{ i + 1 }}
+                  </span>
+                </td>
+                <td class="px-4 py-3 text-sm text-slate-700 dark:text-slate-300">{{ item.name }}</td>
+                <td class="px-4 py-3 text-sm font-medium text-slate-900 dark:text-slate-50 text-right">{{ item.count }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.stat-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
-.stat-tabs button { padding: 8px 20px; border-radius: 20px; border: 1px solid var(--md-sys-color-outline); background: none; color: var(--md-sys-color-on-surface); font-size: 13px; cursor: pointer; }
-.stat-tabs button.active { background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); border-color: var(--md-sys-color-primary); }
-.surface-card { background: var(--md-sys-color-surface-container-low); }
-</style>

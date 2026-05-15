@@ -1,4 +1,5 @@
 import os
+import re
 import sqlite3
 from datetime import datetime
 from typing import Optional
@@ -40,6 +41,50 @@ MAP_FOLDERS = [
 ]
 
 
+def parse_date_from_server_properties(server_folder: str) -> str:
+    props_path = os.path.join(server_folder, 'server.properties')
+    if not os.path.exists(props_path):
+        raise ValueError('server.properties 文件不存在')
+
+    with open(props_path, 'r', encoding='utf-8', errors='ignore') as f:
+        content = f.read()
+
+    patterns = [
+        r'#\w{3}\s+(\w{3})\s+(\d{1,2})\s+\d{2}:\d{2}:\d{2}\s+\w{3,4}\s+(\d{4})',
+        r'#(\d{4})-(\d{1,2})-(\d{1,2})',
+        r'#(\d{1,2})/(\d{1,2})/(\d{4})',
+    ]
+
+    month_map = {
+        'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04',
+        'May': '05', 'Jun': '06', 'Jul': '07', 'Aug': '08',
+        'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12',
+    }
+
+    for line in content.splitlines():
+        if not line.startswith('#'):
+            continue
+
+        match = re.search(patterns[0], line)
+        if match:
+            month_str, day, year = match.group(1), match.group(2), match.group(3)
+            month = month_map.get(month_str)
+            if month:
+                return f"{year}-{month}-{day.zfill(2)}"
+
+        match = re.search(patterns[1], line)
+        if match:
+            year, month, day = match.group(1), match.group(2), match.group(3)
+            return f"{year}-{month.zfill(2)}-{day.zfill(2)}"
+
+        match = re.search(patterns[2], line)
+        if match:
+            month, day, year = match.group(1), match.group(2), match.group(3)
+            return f"{year}-{month.zfill(2)}-{day.zfill(2)}"
+
+    raise ValueError('无法从 server.properties 解析日期')
+
+
 def scan_map_sizes(server_folder: str, date: str,
                    conn: Optional[sqlite3.Connection] = None) -> list:
     close_conn = conn is None
@@ -63,7 +108,10 @@ def scan_map_sizes(server_folder: str, date: str,
     return map_data
 
 
-def scan_server_folder(server_folder: str, date: str) -> dict:
+def scan_server_folder(server_folder: str, date: str = None) -> dict:
+    if date is None:
+        date = parse_date_from_server_properties(server_folder)
+
     conn = get_connection()
 
     uuid_to_name = load_usercache(server_folder)
@@ -122,6 +170,7 @@ def scan_server_folder(server_folder: str, date: str) -> dict:
     conn.close()
 
     return {
+        'date': date,
         'maps': map_data,
         'player_count': player_count,
         'battle_stats_count': battle_count,
@@ -129,8 +178,6 @@ def scan_server_folder(server_folder: str, date: str) -> dict:
         'item_stats_count': item_count,
     }
 
-
-import re
 
 
 def parse_date_from_folder_name(folder_name: str) -> str:
@@ -173,10 +220,13 @@ def batch_scan_parent_folder(parent_folder: str) -> dict:
 
             folder_name = item
             try:
-                date = parse_date_from_folder_name(folder_name)
+                date = parse_date_from_server_properties(item_path)
             except ValueError:
-                mtime = os.path.getmtime(item_path)
-                date = datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
+                try:
+                    date = parse_date_from_folder_name(folder_name)
+                except ValueError:
+                    mtime = os.path.getmtime(item_path)
+                    date = datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
 
             try:
                 scan_result = scan_server_folder(item_path, date)

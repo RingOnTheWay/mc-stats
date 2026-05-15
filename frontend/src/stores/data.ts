@@ -97,8 +97,8 @@ export const useDataStore = defineStore('data', () => {
     allDates.value = Array.from(dateSet).sort()
   }
 
-  async function loadAll() {
-    if (loaded.value) return
+  async function loadAll(force = false) {
+    if (loaded.value && !force) return
     loading.value = true
     try {
       const appStore = useAppStore()
@@ -119,9 +119,14 @@ export const useDataStore = defineStore('data', () => {
     }
   }
 
+  async function reload() {
+    loaded.value = false
+    await loadAll(true)
+  }
+
   return {
     mapSizes, playerStats, battleStats, craftStats, itemStats,
     allDates, allPlayers, loading, loaded,
-    loadAll,
+    loadAll, reload,
   }
 })

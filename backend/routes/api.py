@@ -19,26 +19,67 @@ from backend.services.scanner import scan_server_folder, batch_scan_parent_folde
 api_bp = Blueprint('api', __name__)
 
 
+@api_bp.route('/api/browse', methods=['GET'])
+def browse_directory():
+    path = request.args.get('path', '')
+    if not path:
+        if sys.platform == 'win32':
+            drives = []
+            for letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
+                drive = f'{letter}:\\'
+                if os.path.exists(drive):
+                    drives.append(drive)
+            return jsonify({'path': '', 'parent': '', 'dirs': drives, 'is_root': True})
+        else:
+            path = '/'
+    try:
+        path = os.path.normpath(path)
+        if not os.path.isdir(path):
+            return jsonify({'error': '路径不是文件夹'}), 400
+        parent = os.path.dirname(path)
+        if sys.platform == 'win32':
+            if len(path) == 3 and path[1] == ':' and path[2] == '\\':
+                parent = ''
+        else:
+            if path == '/':
+                parent = ''
+        entries = []
+        for name in sorted(os.listdir(path)):
+            full = os.path.join(path, name)
+            if os.path.isdir(full):
+                try:
+                    os.listdir(full)
+                    entries.append({'name': name, 'path': full, 'accessible': True})
+                except PermissionError:
+                    entries.append({'name': name, 'path': full, 'accessible': False})
+        return jsonify({'path': path, 'parent': parent, 'dirs': entries, 'is_root': False})
+    except PermissionError:
+        return jsonify({'error': '无权限访问'}), 403
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 @api_bp.route('/api/scan', methods=['POST'])
 def scan_data():
     data = request.json
     server_folder = data.get('folder')
-    date = data.get('date', datetime.now().strftime('%Y-%m-%d'))
 
     if not server_folder or not os.path.exists(server_folder):
         return jsonify({'error': '服务器文件夹不存在'}), 400
 
     try:
-        result = scan_server_folder(server_folder, date)
+        result = scan_server_folder(server_folder)
         return jsonify({
             'success': True,
-            'date': date,
+            'date': result['date'],
             'maps': result['maps'],
             'player_count': result['player_count'],
             'battle_stats_count': result['battle_stats_count'],
             'craft_stats_count': result['craft_stats_count'],
             'item_stats_count': result['item_stats_count'],
         })
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -173,6 +214,30 @@ def batch_delete():
         'total_player_deleted': total_player,
         'total_detail_deleted': total_detail,
         'results': results,
+    })
+
+
+@api_bp.route('/api/delete_all', methods=['DELETE'])
+def delete_all():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT COUNT(*) FROM map_sizes')
+    map_count = cursor.fetchone()[0]
+    cursor.execute('SELECT COUNT(*) FROM player_stats')
+    player_count = cursor.fetchone()[0]
+    cursor.execute('SELECT COUNT(*) FROM detail_stats')
+    detail_count = cursor.fetchone()[0]
+    cursor.execute('DELETE FROM map_sizes')
+    cursor.execute('DELETE FROM player_stats')
+    cursor.execute('DELETE FROM detail_stats')
+    conn.commit()
+    conn.close()
+
+    return jsonify({
+        'success': True,
+        'total_map_deleted': map_count,
+        'total_player_deleted': player_count,
+        'total_detail_deleted': detail_count,
     })
 
 

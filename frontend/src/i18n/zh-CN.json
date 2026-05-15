@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "MC Stats",
+    "title": "MineTrack",
     "subtitle": "Minecraft 服务器统计"
   },
   "nav": {
@@ -11,7 +11,8 @@
     "craftStats": "合成统计",
     "itemStats": "物品统计",
     "activity": "活动统计",
-    "dataManage": "数据管理"
+    "dataManage": "数据管理",
+    "settings": "设置"
   },
   "common": {
     "loading": "加载中...",
@@ -20,45 +21,52 @@
     "filterPlayers": "筛选玩家",
     "selectAll": "全选",
     "deselectAll": "清空",
-    "viewDetail": "查看详情 →",
+    "viewDetail": "查看详情",
     "topN": "Top {n}",
     "total": "总计",
     "name": "名称",
     "count": "数量",
-    "item": "物品"
+    "item": "物品",
+    "search": "搜索...",
+    "growth": "增长"
   },
   "dashboard": {
     "totalDays": "统计天数",
     "playerCount": "玩家数量",
     "dateRange": "日期范围",
     "mapTrend": "地图大小趋势",
-    "latestMap": "最新地图大小"
+    "latestMap": "最新地图大小",
+    "subtitle": "服务器数据概览"
   },
   "map": {
     "title": "地图大小变化",
     "world": "主世界",
     "nether": "下界",
     "end": "末地",
-    "unit": "大小 (MB)"
+    "unit": "大小 (MB)",
+    "subtitle": "各维度地图大小变化趋势"
   },
   "battle": {
     "title": "战斗统计",
     "killed": "击杀",
     "killed_by": "被杀",
-    "topMobs": "击杀排行 Top {n}"
+    "topMobs": "击杀排行 Top {n}",
+    "subtitle": "生物击杀与被杀统计"
   },
   "craft": {
     "title": "合成统计",
     "crafted": "合成",
     "used": "使用",
-    "topItems": "合成排行 Top {n}"
+    "topItems": "合成排行 Top {n}",
+    "subtitle": "物品合成与使用统计"
   },
   "item": {
     "title": "物品统计",
     "picked_up": "拾取",
     "dropped": "丢弃",
     "used": "使用",
-    "topItems": "物品排行 Top {n}"
+    "topItems": "物品排行 Top {n}",
+    "subtitle": "物品拾取、丢弃与使用统计"
   },
   "activity": {
     "title": "活动统计",
@@ -71,7 +79,8 @@
     "boat": "划船",
     "aviate": "鞘翅飞行",
     "fall": "坠落",
-    "unit": "距离 (cm)"
+    "unit": "距离 (cm)",
+    "subtitle": "玩家活动距离统计"
   },
   "playerStats": {
     "playTime": "游戏时长 (小时)",
@@ -79,20 +88,37 @@
     "mobKills": "击杀怪物",
     "playerKills": "击杀玩家",
     "jumps": "跳跃次数",
-    "distanceWalked": "行走距离 (km)"
+    "distanceWalked": "行走距离 (km)",
+    "subtitle": "玩家各项数据统计"
   },
   "lang": {
     "switchTo": "English",
     "current": "中文"
   },
+  "theme": {
+    "dark": "暗色",
+    "light": "亮色"
+  },
+  "settings": {
+    "subtitle": "个性化与应用信息",
+    "themeColor": "主题色",
+    "themeColorDesc": "选择你喜欢的主题色，即时预览效果",
+    "about": "关于",
+    "aboutDesc": "应用与作者信息",
+    "author": "作者",
+    "license": "开源协议",
+    "projectRepo": "项目仓库",
+    "version": "版本",
+    "buildDate": "构建日期"
+  },
   "dataManage": {
     "importTab": "数据导入",
-    "exportTab": "数据导出",
-    "manageTab": "数据管理",
+    "deleteTab": "数据删除",
+    "subtitle": "导入和删除服务器统计数据",
     "singleScan": "单次扫描导入",
     "serverFolder": "服务器文件夹路径",
-    "folderPlaceholder": "例如: /path/to/server",
-    "scanDate": "扫描日期",
+    "folderPlaceholder": "输入对应文件夹路径",
+    "scanDate": "服务器日期",
     "startScan": "开始扫描",
     "scanSuccess": "扫描导入成功",
     "date": "日期",
@@ -102,10 +128,14 @@
     "itemCount": "物品记录",
     "batchScan": "批量扫描导入",
     "parentFolder": "父文件夹路径",
-    "parentFolderPlaceholder": "例如: /path/to/backups",
-    "batchHint": "父文件夹下的每个子文件夹将被视为一次备份，文件夹名将作为日期解析",
+    "parentFolderPlaceholder": "输入对应文件夹路径",
+    "batchHint": "父文件夹下的每个子文件夹将被视为一次备份，将自动从 server.properties 识别日期",
     "startBatchScan": "开始批量扫描",
     "batchScanSuccess": "批量扫描导入完成",
+    "total": "总计",
+    "imported": "已导入",
+    "importedDays": "已导入 {n} 天数据",
+    "failed": "失败",
     "exportTitle": "导出数据为 JSON",
     "exportHint": "将数据库中的所有数据导出为 JSON 文件，供静态模式使用",
     "startExport": "开始导出",
@@ -122,6 +152,21 @@
     "confirmBatchDelete": "删除选中的 {n} 个日期",
     "batchDeleteSuccess": "批量删除完成",
     "totalDates": "涉及日期数",
-    "operationFailed": "操作失败"
+    "selectRange": "选择范围",
+    "execute": "执行",
+    "selectDateRange": "选择日期范围",
+    "selectDateRangePlaceholder": "点击选择起始和结束日期",
+    "selectStartDate": "请选择起始日期",
+    "selectEndDate": "请选择结束日期",
+    "matchedDates": "匹配到 {n} 个日期",
+    "selectFolder": "选择文件夹",
+    "selectDrive": "选择驱动器",
+    "selectThisFolder": "选择此文件夹",
+    "cancel": "取消",
+    "deleteAll": "删除全部数据",
+    "deleteAllHint": "此操作将清空数据库中的所有统计数据，且不可恢复，请谨慎操作。",
+    "deleteAllSuccess": "已删除全部数据",
+    "operationFailed": "操作失败",
+    "deleteAllConfirm": "确认删除全部数据"
   }
 }

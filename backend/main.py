@@ -14,7 +14,7 @@ def main():
     app = create_app()
     app.debug = DEBUG
 
-    print(f"MC Stats API 服务器启动在 http://{HOST}:{PORT}")
+    print(f"MineTrack API 服务器启动在 http://{HOST}:{PORT}")
     app.run(host=HOST, port=PORT, debug=DEBUG)
 
 
