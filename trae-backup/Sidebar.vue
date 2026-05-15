@@ -29,6 +29,7 @@ const menuItems = computed(() => [
 ])
 
 const currentPath = computed(() => route.path)
+const isSettingsPage = computed(() => route.path === '/settings')
 
 function navigate(path: string) {
   router.push(path)
@@ -36,6 +37,9 @@ function navigate(path: string) {
 
 function toggleLocale() {
   locale.value = locale.value === 'zh-CN' ? 'en-US' : 'zh-CN'
+  try {
+    localStorage.setItem('locale', locale.value)
+  } catch {}
 }
 </script>
 
@@ -45,8 +49,8 @@ function toggleLocale() {
 
     <div class="relative p-6 border-b border-brand/10 dark:border-brand/20">
       <div class="flex items-center gap-3">
-        <img :src="iconUrl" alt="MC Stats" class="w-10 h-10 rounded-lg shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300" />
-        <span class="text-lg font-semibold text-slate-800 dark:text-slate-100">MC Stats</span>
+        <img :src="iconUrl" alt="MineTrack" class="w-10 h-10 rounded-lg shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300" />
+        <span class="text-lg font-semibold text-slate-800 dark:text-slate-100">MineTrack</span>
       </div>
     </div>
 
@@ -56,7 +60,7 @@ function toggleLocale() {
         :key="item.path"
         v-motion-slide-left="{ delay: index * 50 }"
         class="relative w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-300 group"
-        :class="currentPath === item.path
+        :class="!isSettingsPage && currentPath === item.path
           ? 'nav-item-active'
           : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100/80 dark:hover:bg-slate-800/60'"
         @click="navigate(item.path)"
@@ -64,7 +68,7 @@ function toggleLocale() {
         <div class="relative flex items-center gap-3">
           <div
             class="nav-icon transition-colors"
-            :class="currentPath === item.path ? '' : 'text-slate-500 dark:text-slate-500'"
+            :class="!isSettingsPage && currentPath === item.path ? '' : 'text-slate-500 dark:text-slate-500'"
           >
             <component :is="item.icon" class="w-5 h-5" />
           </div>
@@ -82,7 +86,7 @@ function toggleLocale() {
         </span>
 
         <div
-          v-if="currentPath === item.path"
+          v-if="!isSettingsPage && currentPath === item.path"
           class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-brand to-brand-light rounded-r-full"
         />
       </button>
