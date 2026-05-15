@@ -1,7 +1,5 @@
 import { ref, computed } from 'vue'
 
-const DEFAULT_PLAYERS = ['MuxiAcio', 'RingOfficial', 'Roxy', 'hwj', 'roxy']
-
 export function usePlayerFilter(allPlayers: Set<string>) {
   const selected = ref<Set<string>>(new Set<string>())
 
@@ -11,12 +9,7 @@ export function usePlayerFilter(allPlayers: Set<string>) {
 
   function init() {
     selected.value.clear()
-    const filtered = DEFAULT_PLAYERS.filter(p => allPlayers.has(p))
-    if (filtered.length > 0) {
-      filtered.forEach(p => selected.value.add(p))
-    } else {
-      allPlayers.forEach(p => selected.value.add(p))
-    }
+    allPlayers.forEach(p => selected.value.add(p))
   }
 
   function toggle(player: string) {

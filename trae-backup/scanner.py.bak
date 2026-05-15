@@ -108,29 +108,7 @@ def scan_map_sizes(server_folder: str, date: str,
     return map_data
 
 
-def should_include_player(player_name: str, play_time_seconds: int,
-                          filter_config: dict) -> bool:
-    if not filter_config.get('filter_enabled', False):
-        return True
-
-    whitelist = set(filter_config.get('whitelist', []))
-    blacklist = set(filter_config.get('blacklist', []))
-    min_hours = filter_config.get('min_playtime_hours', 1)
-
-    if whitelist:
-        return player_name in whitelist
-    if player_name in blacklist:
-        return False
-    if play_time_seconds >= min_hours * 3600:
-        return True
-    return False
-
-
-def scan_server_folder(server_folder: str, date: str = None,
-                       filter_config: dict = None) -> dict:
-    if filter_config is None:
-        filter_config = {}
-
+def scan_server_folder(server_folder: str, date: str = None) -> dict:
     if date is None:
         date = parse_date_from_server_properties(server_folder)
 
@@ -142,15 +120,10 @@ def scan_server_folder(server_folder: str, date: str = None,
 
     stats_folder = os.path.join(server_folder, 'world', 'players', 'stats')
     player_stats = parse_player_stats(stats_folder)
-    total_players = len(player_stats)
-    filtered_count = 0
+    player_count = len(player_stats)
 
     for player_uuid, stats in player_stats.items():
         player_name = uuid_to_name.get(player_uuid, player_uuid)
-        play_time_seconds = stats.get('play_time', 0)
-        if not should_include_player(player_name, play_time_seconds, filter_config):
-            filtered_count += 1
-            continue
         for stat_type, stat_value in stats.items():
             PlayerStatsRepository.insert_or_replace(date, player_name, stat_type, stat_value, conn)
 
@@ -158,9 +131,6 @@ def scan_server_folder(server_folder: str, date: str = None,
     battle_count = 0
     for player_uuid, stats in battle_stats.items():
         player_name = uuid_to_name.get(player_uuid, player_uuid)
-        play_time_seconds = player_stats.get(player_uuid, {}).get('play_time', 0)
-        if not should_include_player(player_name, play_time_seconds, filter_config):
-            continue
         for stat_key, stat_value in stats.items():
             parts = stat_key.split(':', 1)
             if len(parts) == 2:
@@ -174,9 +144,6 @@ def scan_server_folder(server_folder: str, date: str = None,
     craft_count = 0
     for player_uuid, stats in craft_stats.items():
         player_name = uuid_to_name.get(player_uuid, player_uuid)
-        play_time_seconds = player_stats.get(player_uuid, {}).get('play_time', 0)
-        if not should_include_player(player_name, play_time_seconds, filter_config):
-            continue
         for stat_key, stat_value in stats.items():
             parts = stat_key.split(':', 1)
             if len(parts) == 2:
@@ -190,9 +157,6 @@ def scan_server_folder(server_folder: str, date: str = None,
     item_count = 0
     for player_uuid, stats in item_stats.items():
         player_name = uuid_to_name.get(player_uuid, player_uuid)
-        play_time_seconds = player_stats.get(player_uuid, {}).get('play_time', 0)
-        if not should_include_player(player_name, play_time_seconds, filter_config):
-            continue
         for stat_key, stat_value in stats.items():
             parts = stat_key.split(':', 1)
             if len(parts) == 2:
@@ -205,20 +169,14 @@ def scan_server_folder(server_folder: str, date: str = None,
     conn.commit()
     conn.close()
 
-    result = {
+    return {
         'date': date,
         'maps': map_data,
-        'player_count': total_players - filtered_count,
+        'player_count': player_count,
         'battle_stats_count': battle_count,
         'craft_stats_count': craft_count,
         'item_stats_count': item_count,
     }
-
-    if filtered_count > 0:
-        result['filtered_count'] = filtered_count
-        result['total_players'] = total_players
-
-    return result
 
 
 
@@ -246,8 +204,7 @@ def parse_date_from_folder_name(folder_name: str) -> str:
     raise ValueError(f"无法从文件夹名 '{folder_name}' 解析日期")
 
 
-def batch_scan_parent_folder(parent_folder: str,
-                             filter_config: dict = None) -> dict:
+def batch_scan_parent_folder(parent_folder: str) -> dict:
     results = []
     errors = []
 
@@ -272,25 +229,18 @@ def batch_scan_parent_folder(parent_folder: str,
                     date = datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
 
             try:
-                scan_result = scan_server_folder(item_path, date, filter_config=filter_config)
-                result_entry = {
+                scan_result = scan_server_folder(item_path, date)
+                results.append({
                     'folder': folder_name,
                     'date': date,
                     'success': True,
                     'maps': scan_result['maps'],
                     'player_count': scan_result['player_count'],
-                }
-                if scan_result.get('filtered_count', 0) > 0:
-                    result_entry['filtered_count'] = scan_result['filtered_count']
-                    result_entry['total_players'] = scan_result['total_players']
-                results.append(result_entry)
+                })
             except Exception as e:
                 errors.append({'folder': folder_name, 'error': str(e)})
 
-        total_filtered = sum(r.get('filtered_count', 0) for r in results)
-        total_players_all = sum(r.get('total_players', r.get('player_count', 0)) for r in results)
-
-        response = {
+        return {
             'success': True,
             'total': len(results) + len(errors),
             'imported': len(results),
@@ -298,12 +248,6 @@ def batch_scan_parent_folder(parent_folder: str,
             'results': results,
             'errors': errors,
         }
-
-        if total_filtered > 0:
-            response['filtered_count'] = total_filtered
-            response['total_players'] = total_players_all
-
-        return response
 
     except Exception as e:
         return {'error': str(e)}

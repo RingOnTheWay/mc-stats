@@ -109,6 +109,18 @@
     "navItemsDesc": "Customize which items appear in the sidebar navigation",
     "chartTotal": "Show Chart Total",
     "chartTotalDesc": "Display total data line in statistics charts by default",
+    "playerFilter": "Player Import Filter",
+    "playerFilterDesc": "Filter players during data import to prevent importing bots or passersby",
+    "minPlaytime": "Minimum Playtime",
+    "minPlaytimeDesc": "Players with playtime below this value will be filtered (whitelist players are exempt)",
+    "hours": "hours",
+    "whitelist": "Whitelist",
+    "whitelistDesc": "When configured, only whitelisted players are imported; when empty, blacklist and minimum playtime apply",
+    "blacklist": "Blacklist",
+    "blacklistDesc": "Blacklisted players are always excluded, even if they meet the minimum playtime",
+    "emptyList": "Empty",
+    "addPlayerPlaceholder": "Enter player name, press Enter to add",
+    "filterHint": "Filter priority: Whitelist (always include) → Blacklist (always exclude) → Minimum playtime (filter). Adding to whitelist auto-removes from blacklist and vice versa.",
     "about": "About",
     "aboutDesc": "App and author information",
     "author": "Author",
@@ -173,6 +185,7 @@
     "deleteAllHint": "This will clear all statistics data from the database. This action cannot be undone.",
     "deleteAllSuccess": "All data deleted",
     "operationFailed": "Operation failed",
-    "deleteAllConfirm": "Confirm Delete All Data"
+    "deleteAllConfirm": "Confirm Delete All Data",
+    "filteredOut": "{n} filtered out"
   }
 }

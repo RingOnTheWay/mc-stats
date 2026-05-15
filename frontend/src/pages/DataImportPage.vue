@@ -29,6 +29,7 @@ const deleteError = ref('')
 const deleteAllLoading = ref(false)
 const deleteAllResult = ref<any>(null)
 const deleteAllError = ref('')
+const showDeleteAllConfirm = ref(false)
 
 const deleteDate = ref('')
 const deleteSingleLoading = ref(false)
@@ -158,6 +159,7 @@ async function handleBatchDelete() {
 }
 
 async function handleDeleteAll() {
+  showDeleteAllConfirm.value = false
   deleteAllLoading.value = true; deleteAllResult.value = null; deleteAllError.value = ''
   globalLoading.value = true; globalLoadingText.value = t('dataManage.deleteAll')
   try {
@@ -338,7 +340,7 @@ function selectFolderAndClose() {
           <div class="font-semibold text-emerald-800 dark:text-emerald-300 text-sm mb-2">{{ t('dataManage.scanSuccess') }}</div>
           <div class="flex flex-wrap gap-3 text-xs text-emerald-700 dark:text-emerald-400">
             <span>{{ t('dataManage.date') }}: {{ scanResult.date }}</span>
-            <span>{{ t('dataManage.playerCount') }}: {{ scanResult.player_count }}</span>
+            <span>{{ t('dataManage.playerCount') }}: {{ scanResult.player_count }}<template v-if="scanResult.filtered_count"> ({{ t('dataManage.filteredOut', { n: scanResult.filtered_count }) }})</template></span>
             <span>{{ t('dataManage.battleCount') }}: {{ scanResult.battle_stats_count }}</span>
             <span>{{ t('dataManage.craftCount') }}: {{ scanResult.craft_stats_count }}</span>
             <span>{{ t('dataManage.itemCount') }}: {{ scanResult.item_stats_count }}</span>
@@ -380,7 +382,7 @@ function selectFolderAndClose() {
         <div v-if="batchResult" class="mt-4 p-4 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-100 dark:border-emerald-800/50 rounded-xl">
           <div class="font-semibold text-emerald-800 dark:text-emerald-300 text-sm mb-2">{{ t('dataManage.batchScanSuccess') }}</div>
           <div class="text-xs text-emerald-700 dark:text-emerald-400">
-            {{ t('dataManage.importedDays', { n: batchResult.imported }) }}
+            {{ t('dataManage.importedDays', { n: batchResult.imported }) }}<template v-if="batchResult.filtered_count"> · {{ t('dataManage.filteredOut', { n: batchResult.filtered_count }) }}</template>
           </div>
         </div>
       </div>
@@ -499,7 +501,7 @@ function selectFolderAndClose() {
           <button
             class="btn-danger inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-medium transition-all"
             :disabled="deleteAllLoading"
-            @click="handleDeleteAll"
+            @click="showDeleteAllConfirm = true"
           >
             <Loader2 v-if="deleteAllLoading" class="w-4 h-4 animate-spin" />
             <Play v-else class="w-4 h-4" />
@@ -648,6 +650,30 @@ function selectFolderAndClose() {
           <Loader2 class="w-12 h-12 animate-spin text-brand" />
           <div class="mt-6 text-base font-semibold text-slate-700 dark:text-slate-200">{{ globalLoadingText }}</div>
           <div class="mt-2 text-sm text-slate-400 dark:text-slate-500">{{ t('common.loading') }}</div>
+        </div>
+      </div>
+    </Teleport>
+
+    <Teleport to="body">
+      <div v-if="showDeleteAllConfirm" class="global-loading-overlay" @click.self="showDeleteAllConfirm = false">
+        <div class="folder-browser-card dark:bg-slate-800 dark:border-slate-700">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 bg-gradient-to-br from-red-500/20 to-red-500/10 rounded-xl flex items-center justify-center">
+              <Trash2 class="w-5 h-5 text-red-500" />
+            </div>
+            <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-100">{{ t('dataManage.deleteAll') }}</h3>
+          </div>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mb-6">{{ t('dataManage.deleteAllHint') }}</p>
+          <div class="flex items-center justify-end gap-2">
+            <button class="px-4 py-2 text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-all" @click="showDeleteAllConfirm = false">{{ t('dataManage.cancel') }}</button>
+            <button
+              class="btn-danger px-4 py-2 text-sm rounded-lg transition-all inline-flex items-center gap-2"
+              @click="handleDeleteAll"
+            >
+              <Trash2 class="w-4 h-4" />
+              {{ t('dataManage.deleteAllConfirm') }}
+            </button>
+          </div>
         </div>
       </div>
     </Teleport>

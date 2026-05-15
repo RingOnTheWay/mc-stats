@@ -109,6 +109,18 @@
     "navItemsDesc": "自定义左侧导航栏显示的功能项",
     "chartTotal": "图表显示总计",
     "chartTotalDesc": "在统计图表中默认显示总计数据线",
+    "playerFilter": "玩家导入筛选",
+    "playerFilterDesc": "导入数据时筛选玩家，防止导入过多机器人或路人",
+    "minPlaytime": "最小游戏时长",
+    "minPlaytimeDesc": "游戏时长低于此值的玩家将被过滤（白名单中的玩家不受此限制）",
+    "hours": "小时",
+    "whitelist": "白名单",
+    "whitelistDesc": "配置后仅导入白名单中的玩家，其他玩家一律排除；为空时则按黑名单和最小时长筛选",
+    "blacklist": "黑名单",
+    "blacklistDesc": "黑名单中的玩家始终排除，即使满足最小时长也不导入",
+    "emptyList": "暂无",
+    "addPlayerPlaceholder": "输入玩家名，按回车添加",
+    "filterHint": "筛选优先级：白名单（保送）→ 黑名单（排除）→ 最小时长（过滤）。添加到白名单时将自动从黑名单移除，反之亦然。",
     "about": "关于",
     "aboutDesc": "应用与作者信息",
     "author": "作者",
@@ -173,6 +185,7 @@
     "deleteAllHint": "此操作将清空数据库中的所有统计数据，且不可恢复，请谨慎操作。",
     "deleteAllSuccess": "已删除全部数据",
     "operationFailed": "操作失败",
-    "deleteAllConfirm": "确认删除全部数据"
+    "deleteAllConfirm": "确认删除全部数据",
+    "filteredOut": "已过滤 {n} 人"
   }
 }

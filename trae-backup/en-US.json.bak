@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "MC Stats",
+    "title": "MineTrack",
     "subtitle": "Minecraft Server Statistics"
   },
   "nav": {
@@ -11,13 +11,16 @@
     "craftStats": "Craft Stats",
     "itemStats": "Item Stats",
     "activity": "Activity",
-    "dataManage": "Data Manage"
+    "dataManage": "Data Manage",
+    "settings": "Settings"
   },
   "common": {
     "loading": "Loading...",
     "noData": "No Data",
     "allPlayers": "All Players",
     "filterPlayers": "Filter Players",
+    "searchPlayer": "Search players...",
+    "noResults": "No results found",
     "selectAll": "Select All",
     "deselectAll": "Deselect All",
     "viewDetail": "View Detail",
@@ -33,12 +36,12 @@
     "totalDays": "Total Days",
     "playerCount": "Player Count",
     "dateRange": "Date Range",
-    "mapTrend": "Map Size Trend",
+    "mapTrend": "Map Size Trend (MB)",
     "latestMap": "Latest Map Size",
     "subtitle": "Server data overview"
   },
   "map": {
-    "title": "Map Size Over Time",
+    "title": "Map Size Over Time (MB)",
     "world": "Overworld",
     "nether": "Nether",
     "end": "The End",
@@ -98,6 +101,22 @@
     "dark": "Dark",
     "light": "Light"
   },
+  "settings": {
+    "subtitle": "Personalization & app info",
+    "themeColor": "Theme Color",
+    "themeColorDesc": "Choose your favorite theme color with instant preview",
+    "navItems": "Navigation Items",
+    "navItemsDesc": "Customize which items appear in the sidebar navigation",
+    "chartTotal": "Show Chart Total",
+    "chartTotalDesc": "Display total data line in statistics charts by default",
+    "about": "About",
+    "aboutDesc": "App and author information",
+    "author": "Author",
+    "license": "License",
+    "projectRepo": "Repository",
+    "version": "Version",
+    "buildDate": "Build Date"
+  },
   "dataManage": {
     "importTab": "Import",
     "deleteTab": "Delete",
@@ -153,6 +172,7 @@
     "deleteAll": "Delete All Data",
     "deleteAllHint": "This will clear all statistics data from the database. This action cannot be undone.",
     "deleteAllSuccess": "All data deleted",
-    "operationFailed": "Operation failed"
+    "operationFailed": "Operation failed",
+    "deleteAllConfirm": "Confirm Delete All Data"
   }
 }
