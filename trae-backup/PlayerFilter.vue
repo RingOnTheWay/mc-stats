@@ -63,24 +63,24 @@ onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside))
 
 <template>
   <div ref="dropdownRef" class="flex items-center gap-3">
-    <div class="flex items-center gap-2 text-sm font-medium text-slate-600 whitespace-nowrap">
-      <Users class="w-4 h-4 text-brand" />
+    <div class="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-400 whitespace-nowrap">
+      <Users class="w-4 h-4 text-brand dark:text-brand-light" />
       <span>{{ t('common.filterPlayers') }}</span>
     </div>
     <div class="relative flex-1 max-w-[600px]">
       <div
-        class="flex items-center justify-between px-3 py-2 rounded-xl border bg-white/80 cursor-pointer transition-all min-h-[44px] gap-2"
-        :class="open ? 'border-brand/40 ring-2 ring-brand/20' : 'border-slate-200 hover:border-slate-300'"
+        class="flex items-center justify-between px-3 py-2 rounded-xl border bg-white/80 dark:bg-slate-800/80 cursor-pointer transition-all min-h-[44px] gap-2"
+        :class="open ? 'border-brand/40 ring-2 ring-brand/20' : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'"
         @click="toggleDropdown"
       >
         <div class="flex flex-wrap gap-1.5 flex-1 min-w-0">
           <template v-if="isAll">
-            <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 text-slate-600">{{ t('common.allPlayers') }}</span>
+            <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400">{{ t('common.allPlayers') }}</span>
           </template>
           <template v-else>
-            <span v-for="p in visibleBadges" :key="p" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-brand/10 text-brand">
+            <span v-for="p in visibleBadges" :key="p" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-brand/10 dark:bg-brand/20 text-brand dark:text-brand-light">
               {{ p }}
-              <button class="hover:bg-brand/20 rounded-full p-0.5 transition-colors" @click.stop="removePlayer(p, $event)">
+              <button class="hover:bg-brand/20 dark:hover:bg-brand/30 rounded-full p-0.5 transition-colors" @click.stop="removePlayer(p, $event)">
                 <X class="w-3 h-3" />
               </button>
             </span>
@@ -89,27 +89,38 @@ onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside))
             </span>
           </template>
         </div>
-        <ChevronDown class="w-4 h-4 text-slate-400 transition-transform flex-shrink-0" :class="{ 'rotate-180': open }" />
+        <ChevronDown class="w-4 h-4 text-slate-400 dark:text-slate-500 transition-transform flex-shrink-0" :class="{ 'rotate-180': open }" />
       </div>
 
-      <div v-if="open" class="absolute top-full mt-1 left-0 right-0 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden" @click.stop>
-        <div class="flex gap-2 p-3 border-b border-slate-100">
-          <button class="px-3 py-1.5 bg-brand/10 text-brand rounded-lg text-xs font-medium hover:bg-brand/20 transition-all" @click="handleSelectAll">{{ t('common.selectAll') }}</button>
-          <button class="px-3 py-1.5 bg-brand/10 text-brand rounded-lg text-xs font-medium hover:bg-brand/20 transition-all" @click="handleDeselectAll">{{ t('common.deselectAll') }}</button>
+      <div v-if="open" class="absolute top-full mt-1 left-0 right-0 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border border-slate-200 dark:border-slate-600 rounded-xl shadow-xl z-50 overflow-hidden" @click.stop>
+        <div class="flex gap-2 p-3 border-b border-slate-100 dark:border-slate-700">
+          <button class="px-3 py-1.5 bg-brand/10 dark:bg-brand/20 text-brand dark:text-brand-light rounded-lg text-xs font-medium hover:bg-brand/20 dark:hover:bg-brand/30 transition-all" @click="handleSelectAll">{{ t('common.selectAll') }}</button>
+          <button class="px-3 py-1.5 bg-brand/10 dark:bg-brand/20 text-brand dark:text-brand-light rounded-lg text-xs font-medium hover:bg-brand/20 dark:hover:bg-brand/30 transition-all" @click="handleDeselectAll">{{ t('common.deselectAll') }}</button>
         </div>
-        <div class="max-h-[260px] overflow-y-auto p-1">
+        <div class="max-h-[260px] overflow-y-auto hide-scrollbar p-1">
           <label
             v-for="p in filter.sortedPlayers.value"
             :key="p"
             class="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all text-sm"
-            :class="selectedSet.has(p) ? 'bg-brand/10 text-brand' : 'text-slate-600 hover:bg-slate-50'"
+            :class="selectedSet.has(p) ? 'bg-brand/10 dark:bg-brand/20 text-brand dark:text-brand-light' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50'"
           >
             <input type="checkbox" :checked="selectedSet.has(p)" @change="togglePlayer(p)" class="accent-brand" />
             <span class="flex-1">{{ p }}</span>
-            <Check v-if="selectedSet.has(p)" class="w-4 h-4 text-brand" />
+            <Check v-if="selectedSet.has(p)" class="w-4 h-4 text-brand dark:text-brand-light" />
           </label>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+</style>
