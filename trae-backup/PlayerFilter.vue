@@ -62,7 +62,7 @@ onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside))
 </script>
 
 <template>
-  <div ref="dropdownRef" class="flex items-center gap-3">
+  <div ref="dropdownRef" class="flex items-center gap-3" @click="toggleDropdown">
     <div class="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-400 whitespace-nowrap">
       <Users class="w-4 h-4 text-brand dark:text-brand-light" />
       <span>{{ t('common.filterPlayers') }}</span>
@@ -71,7 +71,6 @@ onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside))
       <div
         class="flex items-center justify-between px-3 py-2 rounded-xl border bg-white/80 dark:bg-slate-800/80 cursor-pointer transition-all min-h-[44px] gap-2"
         :class="open ? 'border-brand/40 ring-2 ring-brand/20' : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'"
-        @click="toggleDropdown"
       >
         <div class="flex flex-wrap gap-1.5 flex-1 min-w-0">
           <template v-if="isAll">

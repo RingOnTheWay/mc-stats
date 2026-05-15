@@ -19,6 +19,8 @@
     "noData": "暂无数据",
     "allPlayers": "全部玩家",
     "filterPlayers": "筛选玩家",
+    "searchPlayer": "搜索玩家...",
+    "noResults": "无匹配结果",
     "selectAll": "全选",
     "deselectAll": "清空",
     "viewDetail": "查看详情",

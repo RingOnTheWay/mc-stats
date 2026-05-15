@@ -19,6 +19,8 @@
     "noData": "No Data",
     "allPlayers": "All Players",
     "filterPlayers": "Filter Players",
+    "searchPlayer": "Search players...",
+    "noResults": "No results found",
     "selectAll": "Select All",
     "deselectAll": "Deselect All",
     "viewDetail": "View Detail",
