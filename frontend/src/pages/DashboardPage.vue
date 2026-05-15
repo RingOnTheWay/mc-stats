@@ -131,8 +131,6 @@ const mapGrowth = computed(() => {
           </div>
 
           <div class="text-sm text-slate-600 dark:text-slate-400 font-medium">{{ card.label }}</div>
-
-          <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-brand/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
         </div>
       </div>
     </div>
@@ -143,7 +141,7 @@ const mapGrowth = computed(() => {
         :key="item.path"
         v-motion-slide-bottom="{ delay: 300 + index * 100 }"
         :class="[item.hoverShadow]"
-        class="relative bg-white dark:bg-slate-800 rounded-2xl p-8 border border-white/80 dark:border-slate-700/80 shadow-sm hover:shadow-lg hover:scale-105 active:scale-[0.98] transition-all duration-300 group overflow-hidden"
+        class="relative bg-white dark:bg-slate-800 rounded-2xl p-8 border border-white/80 dark:border-slate-700/80 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group overflow-hidden"
         @click="goPage(item.path)"
       >
         <div :class="`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`" />
@@ -158,8 +156,6 @@ const mapGrowth = computed(() => {
             {{ item.label }}
           </span>
         </div>
-
-        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-1 bg-gradient-to-r from-transparent via-brand to-transparent group-hover:w-full transition-all duration-300" />
       </button>
     </div>
 
