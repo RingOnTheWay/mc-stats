@@ -85,7 +85,15 @@ MineTrack is a Minecraft server data statistics panel built with Vue 3 + Flask l
 - 🗂️ Folder browser: drive selection, directory navigation, inaccessible directory markers
 - 🗑️ Delete by date: custom calendar popup selector
 - 🧹 Batch delete: date range selector
-- ⚠️ Delete all data
+- ⚠️ Delete all data (with confirmation dialog)
+
+### Player Import Filter
+
+- 🔀 Master switch: disabled by default; when enabled, players are automatically filtered during data import
+- ⏱️ Minimum playtime: players below the threshold are filtered out (default 1 hour)
+- ✅ Whitelist: when configured, only whitelisted players are imported; all others are excluded
+- ❌ Blacklist: blacklisted players are always excluded (mutually exclusive with whitelist; adding to one auto-removes from the other)
+- 📊 Scan result feedback: filtered player count shown after import
 
 ### Personalization Settings
 
@@ -151,6 +159,8 @@ Deploy `frontend/dist/` to GitHub Pages.
 | DELETE | `/api/delete_date`                            | `{"date":"..."}` Delete data for a date              |
 | DELETE | `/api/batch_delete`                           | `{"dates":["...","..."]}` Batch delete dates         |
 | DELETE | `/api/delete_all`                             | Delete all data                                      |
+| GET    | `/api/settings`                               | Get filter settings                                  |
+| POST   | `/api/settings`                               | Update filter settings                               |
 
 > Backward compatible: `/api/battle_stats`, `/api/craft_stats`, `/api/item_stats`, `/api/battle_summary` are still available, all mapped to the unified `/api/stats/:domain` interface.
 
@@ -306,6 +316,8 @@ services/api.ts   ← Unified API calls (auto-switch local/static mode)
 - `services/scanner.py` batch scanning auto-detects dates from folder names (supports `YYYY-MM-DD`, `YYYY.MM.DD`, `YYYY_MM_DD`, `MM.DD` formats), with three-level fallback: server.properties → folder name → modification time
 - Theme colors switch in real-time via CSS custom properties `--color-brand` / `--brand`, all components and charts respond
 - Language preference, dark mode, and theme color selection are persisted to localStorage
+- Player import filter settings are persisted to the database `settings` table (key-value structure), supporting whitelist/blacklist/minimum playtime filtering
+- Whitelist and blacklist are mutually exclusive: adding to one auto-removes from the other; when whitelist is not empty, only whitelisted players are imported
 - Player filter uses golden angle distribution (137.508°) algorithm for high-contrast color generation
 - ECharts is loaded on-demand: CanvasRenderer, LineChart, BarChart, GridComponent, TooltipComponent, LegendComponent, DataZoomComponent
 
