@@ -10,6 +10,7 @@
     "battleStats": "战斗统计",
     "craftStats": "合成统计",
     "itemStats": "物品统计",
+    "blockStats": "方块统计",
     "activity": "活动统计",
     "dataManage": "数据管理",
     "settings": "设置"
@@ -70,6 +71,13 @@
     "topItems": "物品排行 Top {n}",
     "subtitle": "物品拾取、丢弃与使用统计"
   },
+  "block": {
+    "title": "方块统计",
+    "mined": "挖掘",
+    "broken": "损耗",
+    "topItems": "方块排行 Top {n}",
+    "subtitle": "方块挖掘与工具损耗统计"
+  },
   "activity": {
     "title": "活动统计",
     "sprint": "冲刺",
@@ -91,6 +99,22 @@
     "playerKills": "击杀玩家",
     "jumps": "跳跃次数",
     "distanceWalked": "行走距离 (km)",
+    "damageTaken": "承受伤害",
+    "sleepInBed": "睡觉次数",
+    "fishCaught": "钓鱼次数",
+    "animalsBred": "繁殖动物",
+    "tradedWithVillager": "村民交易",
+    "talkedToVillager": "与村民对话",
+    "enchantItem": "附魔次数",
+    "interactWithCraftingTable": "使用工作台",
+    "interactWithFurnace": "使用熔炉",
+    "interactWithAnvil": "使用铁砧",
+    "openChest": "打开箱子",
+    "bellRing": "敲钟次数",
+    "dropCount": "丢弃物品",
+    "eatCakeSlice": "吃蛋糕",
+    "sneakTime": "潜行时长 (小时)",
+    "leaveGame": "离开游戏",
     "subtitle": "玩家各项数据统计"
   },
   "lang": {
@@ -147,6 +171,7 @@
     "battleCount": "战斗记录",
     "craftCount": "合成记录",
     "itemCount": "物品记录",
+    "blockCount": "方块记录",
     "batchScan": "批量扫描导入",
     "parentFolder": "父文件夹路径",
     "parentFolderPlaceholder": "输入对应文件夹路径",

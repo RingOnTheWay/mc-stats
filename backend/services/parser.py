@@ -44,6 +44,7 @@ def parse_player_stats(stats_folder: str) -> dict:
                 'mob_kills': custom.get('minecraft:mob_kills', 0),
                 'player_kills': custom.get('minecraft:player_kills', 0),
                 'damage_dealt': custom.get('minecraft:damage_dealt', 0),
+                'damage_taken': custom.get('minecraft:damage_taken', 0),
                 'distance_walked': custom.get('minecraft:walk_one_cm', 0) // 100,
                 'jumps': custom.get('minecraft:jump', 0),
                 'sprint_one_cm': custom.get('minecraft:sprint_one_cm', 0),
@@ -55,6 +56,21 @@ def parse_player_stats(stats_folder: str) -> dict:
                 'boat_one_cm': custom.get('minecraft:boat_one_cm', 0),
                 'aviate_one_cm': custom.get('minecraft:aviate_one_cm', 0),
                 'fall_one_cm': custom.get('minecraft:fall_one_cm', 0),
+                'sleep_in_bed': custom.get('minecraft:sleep_in_bed', 0),
+                'fish_caught': custom.get('minecraft:fish_caught', 0),
+                'animals_bred': custom.get('minecraft:animals_bred', 0),
+                'traded_with_villager': custom.get('minecraft:traded_with_villager', 0),
+                'talked_to_villager': custom.get('minecraft:talked_to_villager', 0),
+                'enchant_item': custom.get('minecraft:enchant_item', 0),
+                'interact_with_crafting_table': custom.get('minecraft:interact_with_crafting_table', 0),
+                'interact_with_furnace': custom.get('minecraft:interact_with_furnace', 0),
+                'interact_with_anvil': custom.get('minecraft:interact_with_anvil', 0),
+                'open_chest': custom.get('minecraft:open_chest', 0),
+                'bell_ring': custom.get('minecraft:bell_ring', 0),
+                'drop_count': custom.get('minecraft:drop', 0),
+                'eat_cake_slice': custom.get('minecraft:eat_cake_slice', 0),
+                'sneak_time': custom.get('minecraft:sneak_time', 0) // 20,
+                'leave_game': custom.get('minecraft:leave_game', 0),
             }
             player_stats[player_uuid] = player_data
         except Exception as e:
@@ -111,6 +127,11 @@ ITEM_CATEGORIES = {
     'used': 'minecraft:used',
 }
 
+BLOCK_CATEGORIES = {
+    'mined': 'minecraft:mined',
+    'broken': 'minecraft:broken',
+}
+
 
 def parse_battle_stats(stats_folder: str) -> dict:
     return parse_detail_stats(stats_folder, 'battle', BATTLE_CATEGORIES)
@@ -124,10 +145,15 @@ def parse_item_stats(stats_folder: str) -> dict:
     return parse_detail_stats(stats_folder, 'item', ITEM_CATEGORIES)
 
 
+def parse_block_stats(stats_folder: str) -> dict:
+    return parse_detail_stats(stats_folder, 'block', BLOCK_CATEGORIES)
+
+
 DOMAIN_CATEGORIES = {
     'battle': BATTLE_CATEGORIES,
     'craft': CRAFT_CATEGORIES,
     'item': ITEM_CATEGORIES,
+    'block': BLOCK_CATEGORIES,
 }
 
 

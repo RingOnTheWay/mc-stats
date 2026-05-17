@@ -79,6 +79,7 @@ def scan_data():
             'battle_stats_count': result['battle_stats_count'],
             'craft_stats_count': result['craft_stats_count'],
             'item_stats_count': result['item_stats_count'],
+            'block_stats_count': result.get('block_stats_count', 0),
         }
         if result.get('filtered_count', 0) > 0:
             response['filtered_count'] = result['filtered_count']
@@ -137,6 +138,21 @@ def get_craft_stats():
 def get_item_stats():
     category = request.args.get('category', 'picked_up')
     data = DetailStatsRepository.get_by_domain_and_category('item', category)
+    return jsonify(data)
+
+
+@api_bp.route('/api/block_stats', methods=['GET'])
+def get_block_stats():
+    category = request.args.get('category', 'mined')
+    data = DetailStatsRepository.get_by_domain_and_category('block', category)
+    return jsonify(data)
+
+
+@api_bp.route('/api/block_summary', methods=['GET'])
+def get_block_summary():
+    category = request.args.get('category', 'mined')
+    limit = int(request.args.get('limit', 10))
+    data = DetailStatsRepository.get_summary('block', category, limit)
     return jsonify(data)
 
 

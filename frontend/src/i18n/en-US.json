@@ -10,6 +10,7 @@
     "battleStats": "Battle Stats",
     "craftStats": "Craft Stats",
     "itemStats": "Item Stats",
+    "blockStats": "Block Stats",
     "activity": "Activity",
     "dataManage": "Data Manage",
     "settings": "Settings"
@@ -70,6 +71,13 @@
     "topItems": "Top {n} Items",
     "subtitle": "Item pickup, drop and usage statistics"
   },
+  "block": {
+    "title": "Block Stats",
+    "mined": "Mined",
+    "broken": "Broken",
+    "topItems": "Top {n} Blocks",
+    "subtitle": "Block mining and tool breakage statistics"
+  },
   "activity": {
     "title": "Activity Stats",
     "sprint": "Sprint",
@@ -91,6 +99,22 @@
     "playerKills": "Player Kills",
     "jumps": "Jumps",
     "distanceWalked": "Walk Distance (km)",
+    "damageTaken": "Damage Taken",
+    "sleepInBed": "Sleep in Bed",
+    "fishCaught": "Fish Caught",
+    "animalsBred": "Animals Bred",
+    "tradedWithVillager": "Villager Trades",
+    "talkedToVillager": "Talked to Villager",
+    "enchantItem": "Items Enchanted",
+    "interactWithCraftingTable": "Crafting Table Used",
+    "interactWithFurnace": "Furnace Used",
+    "interactWithAnvil": "Anvil Used",
+    "openChest": "Chests Opened",
+    "bellRing": "Bell Rung",
+    "dropCount": "Items Dropped",
+    "eatCakeSlice": "Cake Slices Eaten",
+    "sneakTime": "Sneak Time (hours)",
+    "leaveGame": "Leave Game",
     "subtitle": "Player statistics overview"
   },
   "lang": {
@@ -147,6 +171,7 @@
     "battleCount": "Battle Records",
     "craftCount": "Craft Records",
     "itemCount": "Item Records",
+    "blockCount": "Block Records",
     "batchScan": "Batch Scan Import",
     "parentFolder": "Parent Folder Path",
     "parentFolderPlaceholder": "Enter the folder path",

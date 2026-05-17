@@ -6,7 +6,7 @@ import { useDataStore } from '@/stores/data'
 import { useAppStore } from '@/stores/app'
 import type { NavKey } from '@/stores/app'
 import {
-  LayoutDashboard, Map, Users, Swords, Hammer, Package, TrendingUp,
+  LayoutDashboard, Map, Users, Swords, Hammer, Package, Pickaxe, TrendingUp,
   Database, Languages, Moon, Sun
 } from 'lucide-vue-next'
 
@@ -25,6 +25,7 @@ const allMenuItems = computed(() => [
   { icon: Swords, label: t('nav.battleStats'), path: '/battle' as NavKey, badge: null },
   { icon: Hammer, label: t('nav.craftStats'), path: '/craft' as NavKey, badge: null },
   { icon: Package, label: t('nav.itemStats'), path: '/items' as NavKey, badge: null },
+  { icon: Pickaxe, label: t('nav.blockStats'), path: '/blocks' as NavKey, badge: null },
   { icon: TrendingUp, label: t('nav.activity'), path: '/activity' as NavKey, badge: null },
   { icon: Database, label: t('nav.dataManage'), path: '/data-manage' as NavKey, badge: null },
 ])

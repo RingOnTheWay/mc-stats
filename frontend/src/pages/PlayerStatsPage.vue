@@ -11,17 +11,36 @@ import PlayerFilter from '@/components/PlayerFilter.vue'
 
 const { t, locale } = useI18n()
 
-const STAT_KEYS = ['play_time', 'deaths', 'mob_kills', 'player_kills', 'jumps', 'distance_walked'] as const
+const STAT_KEYS = [
+  'play_time', 'deaths', 'mob_kills', 'player_kills', 'jumps', 'distance_walked',
+  'damage_taken', 'sleep_in_bed', 'fish_caught', 'animals_bred',
+  'traded_with_villager', 'talked_to_villager', 'enchant_item',
+  'interact_with_crafting_table', 'interact_with_furnace',
+  'interact_with_anvil', 'open_chest', 'bell_ring', 'drop_count',
+  'eat_cake_slice', 'sneak_time', 'leave_game',
+] as const
 
 const STAT_I18N: Record<string, string> = {
   play_time: 'playerStats.playTime', deaths: 'playerStats.deaths',
   mob_kills: 'playerStats.mobKills', player_kills: 'playerStats.playerKills',
   jumps: 'playerStats.jumps', distance_walked: 'playerStats.distanceWalked',
+  damage_taken: 'playerStats.damageTaken', sleep_in_bed: 'playerStats.sleepInBed',
+  fish_caught: 'playerStats.fishCaught', animals_bred: 'playerStats.animalsBred',
+  traded_with_villager: 'playerStats.tradedWithVillager',
+  talked_to_villager: 'playerStats.talkedToVillager',
+  enchant_item: 'playerStats.enchantItem',
+  interact_with_crafting_table: 'playerStats.interactWithCraftingTable',
+  interact_with_furnace: 'playerStats.interactWithFurnace',
+  interact_with_anvil: 'playerStats.interactWithAnvil',
+  open_chest: 'playerStats.openChest', bell_ring: 'playerStats.bellRing',
+  drop_count: 'playerStats.dropCount', eat_cake_slice: 'playerStats.eatCakeSlice',
+  sneak_time: 'playerStats.sneakTime', leave_game: 'playerStats.leaveGame',
 }
 
 const STAT_TRANSFORM: Record<string, ((v: number) => number) | null> = {
   play_time: (v: number) => Number((v / 3600).toFixed(1)),
   distance_walked: (v: number) => Number((v / 100000).toFixed(1)),
+  sneak_time: (v: number) => Number((v / 3600).toFixed(1)),
 }
 
 const data = useDataStore()

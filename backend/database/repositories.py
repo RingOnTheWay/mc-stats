@@ -121,7 +121,7 @@ class PlayerStatsRepository:
 
 
 class DetailStatsRepository:
-    VALID_DOMAINS = {'battle', 'craft', 'item'}
+    VALID_DOMAINS = {'battle', 'craft', 'item', 'block'}
 
     @staticmethod
     def get_by_domain_and_category(stat_domain: str, stat_category: str) -> dict:

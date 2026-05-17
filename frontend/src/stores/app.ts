@@ -34,9 +34,9 @@ function applyThemeColor(theme: ThemeColor) {
   root.style.setProperty('--brand-dark', theme.dark)
 }
 
-export type NavKey = '/' | '/map' | '/players' | '/battle' | '/craft' | '/items' | '/activity' | '/data-manage'
+export type NavKey = '/' | '/map' | '/players' | '/battle' | '/craft' | '/items' | '/blocks' | '/activity' | '/data-manage'
 
-const ALL_NAV_KEYS: NavKey[] = ['/', '/map', '/players', '/battle', '/craft', '/items', '/activity', '/data-manage']
+const ALL_NAV_KEYS: NavKey[] = ['/', '/map', '/players', '/battle', '/craft', '/items', '/blocks', '/activity', '/data-manage']
 
 const DEFAULT_NAV_VISIBILITY: Record<NavKey, boolean> = {
   '/': true,
@@ -45,6 +45,7 @@ const DEFAULT_NAV_VISIBILITY: Record<NavKey, boolean> = {
   '/battle': true,
   '/craft': true,
   '/items': true,
+  '/blocks': true,
   '/activity': true,
   '/data-manage': true,
 }

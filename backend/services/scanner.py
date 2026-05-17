@@ -18,6 +18,7 @@ from backend.services.parser import (
     parse_battle_stats,
     parse_craft_stats,
     parse_item_stats,
+    parse_block_stats,
 )
 
 
@@ -202,6 +203,22 @@ def scan_server_folder(server_folder: str, date: str = None,
                 )
                 item_count += 1
 
+    block_stats = parse_block_stats(stats_folder)
+    block_count = 0
+    for player_uuid, stats in block_stats.items():
+        player_name = uuid_to_name.get(player_uuid, player_uuid)
+        play_time_seconds = player_stats.get(player_uuid, {}).get('play_time', 0)
+        if not should_include_player(player_name, play_time_seconds, filter_config):
+            continue
+        for stat_key, stat_value in stats.items():
+            parts = stat_key.split(':', 1)
+            if len(parts) == 2:
+                stat_category, block_name = parts
+                DetailStatsRepository.insert_or_replace(
+                    date, player_name, 'block', stat_category, block_name, stat_value, conn
+                )
+                block_count += 1
+
     conn.commit()
     conn.close()
 
@@ -212,6 +229,7 @@ def scan_server_folder(server_folder: str, date: str = None,
         'battle_stats_count': battle_count,
         'craft_stats_count': craft_count,
         'item_stats_count': item_count,
+        'block_stats_count': block_count,
     }
 
     if filtered_count > 0:

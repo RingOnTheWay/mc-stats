@@ -33,6 +33,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/pages/ItemStatsPage.vue'),
   },
   {
+    path: '/blocks',
+    name: 'BlockStats',
+    component: () => import('@/pages/BlockStatsPage.vue'),
+  },
+  {
     path: '/activity',
     name: 'Activity',
     component: () => import('@/pages/ActivityPage.vue'),

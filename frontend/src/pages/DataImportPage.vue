@@ -346,6 +346,7 @@ function selectFolderAndClose() {
             <span>{{ t('dataManage.battleCount') }}: {{ scanResult.battle_stats_count }}</span>
             <span>{{ t('dataManage.craftCount') }}: {{ scanResult.craft_stats_count }}</span>
             <span>{{ t('dataManage.itemCount') }}: {{ scanResult.item_stats_count }}</span>
+            <span>{{ t('dataManage.blockCount') }}: {{ scanResult.block_stats_count || 0 }}</span>
           </div>
         </div>
       </div>

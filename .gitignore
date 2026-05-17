@@ -29,6 +29,7 @@ claude-*
 
 # Trae
 .trae-backup/
+trae-backup/
 .trae/
 
 # Local dev
