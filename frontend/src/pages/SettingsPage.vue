@@ -301,7 +301,6 @@ function onBlacklistKeydown(e: KeyboardEvent) {
     </div>
 
     <div
-      v-if="!app.isStatic"
       v-motion-slide-bottom :delay="87"
       class="relative bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm rounded-2xl p-8 border border-white/80 dark:border-slate-700/80 shadow-sm overflow-hidden"
     >
